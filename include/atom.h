@@ -10,6 +10,7 @@ typedef int (*Builtin)(struct Atom args, struct Atom *result);
 struct Atom {
     enum {
         AtomType_Builtin,
+        AtomType_Closure,
         AtomType_Integer,
         AtomType_Nil,
         AtomType_Pair,
@@ -41,11 +42,12 @@ Atom make_builtin(Builtin function);
 Atom make_int(long x);
 Atom make_sym(const char *s);
 
+int make_closure(Atom env, Atom args, Atom body, Atom *result);
+
 Atom cons(Atom car_val, Atom cdr_val);
 
 Atom copy_list(Atom list);
 
-int apply(Atom function, Atom args, Atom *result);
 
 void print_expr(Atom atom);
 

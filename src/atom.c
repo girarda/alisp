@@ -1,4 +1,5 @@
 #include "atom.h"
+#include "expression.h"
 #include "error.h"
 #include <string.h>
 #include <stdio.h>
@@ -54,6 +55,28 @@ void add_symbol_to_table(Atom atom) {
     sym_table = cons(atom, sym_table);
 }
 
+int make_closure(Atom env, Atom args, Atom body, Atom *result) {
+    Atom atom;
+
+    if (!is_valid_expr(args) || !is_valid_expr(body)) {
+        return ERROR_SYNTAX;
+    }
+
+    /* Check argument names are all symbols */
+    atom = args;
+    while (!is_nil(atom)) {
+        if (car(atom).type != AtomType_Symbol) {
+            return ERROR_TYPE;
+        }
+        atom = cdr(atom);
+    }
+
+    *result = cons(env, cons(args, body));
+    result->type = AtomType_Closure;
+
+    return ERROR_OK;
+}
+
 Atom cons(Atom car_val, Atom cdr_val) {
     Atom atom;
 
@@ -86,13 +109,6 @@ Atom copy_list(Atom list) {
     return atom;
 }
 
-int apply(Atom function, Atom args, Atom *result) {
-    if (function.type == AtomType_Builtin) {
-        return (*function.value.builtin)(args, result);
-    }
-
-    return ERROR_TYPE;
-}
 
 void print_expr(Atom atom) {
     switch(atom.type) {
