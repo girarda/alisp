@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdio.h>
 
+struct Allocation *global_allocations = NULL;
+
 Atom make_builtin(Builtin function) {
     Atom atom;
 
@@ -80,10 +82,15 @@ int make_closure(Atom env, Atom args, Atom body, Atom *result) {
 }
 
 Atom cons(Atom car_val, Atom cdr_val) {
+    struct Allocation *alloc;
     Atom atom;
 
+    alloc = malloc(sizeof(struct Allocation));
+    alloc->mark = 0;
+    alloc->next = global_allocations;
+
     atom.type = AtomType_Pair;
-    atom.value.pair = malloc(sizeof(struct Pair));
+    atom.value.pair = &alloc->pair;
 
     car(atom) = car_val;
     cdr(atom) = cdr_val;

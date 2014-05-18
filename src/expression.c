@@ -3,10 +3,19 @@
 #include "error.h"
 
 int eval_expr(Atom expr, Atom env, Atom *result) {
+    static int count = 0;
     Error err = ERROR_OK;
     Atom stack = NIL;
 
     do {
+        if (++count == 100000) {
+                    gc_mark(expr);
+                    gc_mark(env);
+                    gc_mark(stack);
+                    gc();
+                    count = 0;
+                }
+
         if (expr.type == AtomType_Symbol) {
             err = retrieve_env(env, expr, result);
         } else if (expr.type != AtomType_Pair) {

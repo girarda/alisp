@@ -30,6 +30,14 @@ struct Pair {
     struct Atom atom[2];
 };
 
+struct Allocation {
+    struct Pair pair;
+    int mark: 1;
+    struct Allocation *next;
+};
+
+struct Allocation *global_allocations;
+
 typedef struct Atom Atom;
 
 #define car(p) ((p).value.pair->atom[0])
