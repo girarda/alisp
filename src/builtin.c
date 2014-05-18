@@ -42,3 +42,82 @@ int builtin_cons(Atom args, Atom *result) {
 
     return ERROR_OK;
 }
+
+int builtin_add(Atom args, Atom *result) {
+    Atom a, b;
+
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        return ERROR_ARGS;
+    }
+
+    a = car(args);
+    b = car(cdr(args));
+
+    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
+        return ERROR_TYPE;
+    }
+
+    *result = make_int(a.value.integer + b.value.integer);
+
+    return ERROR_OK;
+}
+
+int builtin_substract(Atom args, Atom *result) {
+    Atom a, b;
+
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        return ERROR_ARGS;
+    }
+
+    a = car(args);
+    b = car(cdr(args));
+
+    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
+        return ERROR_TYPE;
+    }
+
+    *result = make_int(a.value.integer - b.value.integer);
+
+    return ERROR_OK;
+}
+
+int builtin_multiply(Atom args, Atom *result) {
+    Atom a, b;
+
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        return ERROR_ARGS;
+    }
+
+    a = car(args);
+    b = car(cdr(args));
+
+    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
+        return ERROR_TYPE;
+    }
+
+    *result = make_int(a.value.integer * b.value.integer);
+
+    return ERROR_OK;
+}
+
+int builtin_divide(Atom args, Atom *result) {
+    //TODO Assert no division by 0
+    Atom a, b;
+
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        return ERROR_ARGS;
+    }
+
+    a = car(args);
+    b = car(cdr(args));
+
+    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
+        return ERROR_TYPE;
+    }
+
+    *result = make_int(a.value.integer / b.value.integer);
+
+    return ERROR_OK;
+}
+
+

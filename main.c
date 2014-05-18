@@ -20,6 +20,11 @@ int main(int argc, char **argv)
     add_binding_env(env, make_sym("CDR"), make_builtin(builtin_cdr));
     add_binding_env(env, make_sym("CONS"), make_builtin(builtin_cons));
 
+    add_binding_env(env, make_sym("+"), make_builtin(builtin_add));
+    add_binding_env(env, make_sym("-"), make_builtin(builtin_substract));
+    add_binding_env(env, make_sym("*"), make_builtin(builtin_multiply));
+    add_binding_env(env, make_sym("/"), make_builtin(builtin_divide));
+
     while ((input = readline("> ")) != NULL) {
         add_history(input);
         const char *p = input;
