@@ -12,5 +12,8 @@ int builtin_substract(Atom args, Atom *result);
 int builtin_multiply(Atom args, Atom *result);
 int builtin_divide(Atom args, Atom *result);
 
+int builtin_numeq(Atom args, Atom *result);
+int builtin_less(Atom args, Atom *result);
+
 
 #endif

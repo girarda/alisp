@@ -120,4 +120,46 @@ int builtin_divide(Atom args, Atom *result) {
     return ERROR_OK;
 }
 
+int builtin_numeq(Atom args, Atom *result) {
+    Atom a, b;
 
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        return ERROR_ARGS;
+    }
+
+    a = car(args);
+    b = car(cdr(args));
+
+    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
+        return ERROR_TYPE;
+    }
+
+    if (a.value.integer == b.value.integer) {
+        *result = make_sym("T");
+    } else {
+        *result = NIL;
+    }
+    return ERROR_OK;
+}
+
+int builtin_less(Atom args, Atom *result) {
+    Atom a, b;
+
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        return ERROR_ARGS;
+    }
+
+    a = car(args);
+    b = car(cdr(args));
+
+    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
+        return ERROR_TYPE;
+    }
+
+    if (a.value.integer < b.value.integer) {
+        *result = make_sym("T");
+    } else {
+        *result = NIL;
+    }
+    return ERROR_OK;
+}

@@ -28,7 +28,29 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
 
             *result = car(args);
             return ERROR_OK;
-        } else if (strcmp(op.value.symbol, "LAMBDA") == 0) {
+        } else if (strcmp(op.value.symbol, "IF") == 0) {
+            Atom cond, val;
+
+            /*TODO: the argument check is terrible
+            Possible solutions: car and cdr return NIL if argument is not pair
+            or create helper function to count list lenght
+            */
+            if (is_nil(args) || is_nil(cdr(args)) || is_nil(cdr(cdr(args))) || !is_nil(cdr(cdr(cdr(args))))) {
+                return ERROR_ARGS;
+            }
+
+            err = eval_expr(car(args), env, &cond);
+            if (err) {
+                return err;
+            }
+
+            if (!is_nil(cond)) {
+                val = car(cdr(args));
+            } else {
+                val = car(cdr(cdr(args)));
+            }
+            return eval_expr(val, env, result);
+        }else if (strcmp(op.value.symbol, "LAMBDA") == 0) {
             if (is_nil(args) || is_nil(cdr(args))) {
                 return ERROR_ARGS;
             }

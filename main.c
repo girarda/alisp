@@ -25,6 +25,11 @@ int main(int argc, char **argv)
     add_binding_env(env, make_sym("*"), make_builtin(builtin_multiply));
     add_binding_env(env, make_sym("/"), make_builtin(builtin_divide));
 
+    add_binding_env(env, make_sym("T"), make_sym("T"));
+
+    add_binding_env(env, make_sym("="), make_builtin(builtin_numeq));
+    add_binding_env(env, make_sym("<"), make_builtin(builtin_less));
+
     while ((input = readline("> ")) != NULL) {
         add_history(input);
         const char *p = input;
