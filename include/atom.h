@@ -12,6 +12,7 @@ struct Atom {
         AtomType_Builtin,
         AtomType_Closure,
         AtomType_Integer,
+        AtomType_Macro,
         AtomType_Nil,
         AtomType_Pair,
         AtomType_Symbol

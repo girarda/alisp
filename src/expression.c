@@ -28,6 +28,30 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
 
             *result = car(args);
             return ERROR_OK;
+        } else if (strcmp(op.value.symbol, "DEFMACRO") == 0) {
+            Atom name, macro;
+            Error err;
+
+            if (is_nil(args) || is_nil(cdr(args))) {
+                return ERROR_ARGS;
+            }
+            if (car(args).type != AtomType_Pair) {
+                return ERROR_SYNTAX;
+            }
+
+            name = car(car(args));
+            if (name.type != AtomType_Symbol) {
+                return ERROR_TYPE;
+            }
+
+            err = make_closure(env, cdr(car(args)), cdr(args), &macro);
+            if (err) {
+                return err;
+            }
+
+            macro.type = AtomType_Macro;
+            *result = name;
+            return add_binding_env(env, name, macro);
         } else if (strcmp(op.value.symbol, "IF") == 0) {
             Atom cond, val;
 
@@ -90,6 +114,16 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
     err = eval_expr(op, env, &op);
     if (err) {
         return err;
+    }
+
+    if (op.type == AtomType_Macro) {
+        Atom expansion;
+        op.type = AtomType_Closure;
+        err = apply(op, args, &expansion);
+        if (err) {
+            return err;
+        }
+        return eval_expr(expansion, env, result);
     }
 
     /* Evaluate arguments */
