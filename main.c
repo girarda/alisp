@@ -6,6 +6,7 @@
 #include "error.h"
 #include "parser.h"
 #include "environment.h"
+#include "builtin.h"
 
 int main(int argc, char **argv)
 {
@@ -13,6 +14,11 @@ int main(int argc, char **argv)
     char *input;
 
     env = create_env(NIL);
+
+    /* Set up initial environment */
+    add_binding_env(env, make_sym("CAR"), make_builtin(builtin_car));
+    add_binding_env(env, make_sym("CDR"), make_builtin(builtin_cdr));
+    add_binding_env(env, make_sym("CONS"), make_builtin(builtin_cons));
 
     while ((input = readline("> ")) != NULL) {
         add_history(input);

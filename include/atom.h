@@ -3,18 +3,24 @@
 
 #include <stdlib.h>
 
+struct Atom;
+
+typedef int (*Builtin)(struct Atom args, struct Atom *result);
+
 struct Atom {
     enum {
+        AtomType_Builtin,
+        AtomType_Integer,
         AtomType_Nil,
         AtomType_Pair,
-        AtomType_Symbol,
-        AtomType_Integer
+        AtomType_Symbol
     } type;
 
     union {
+        Builtin builtin;
+        long integer;
         struct Pair *pair;
         const char *symbol;
-        long integer;
     } value;
 };
 
@@ -31,10 +37,15 @@ typedef struct Atom Atom;
 static const Atom NIL = { AtomType_Nil };
 static Atom sym_table = { AtomType_Nil };
 
+Atom make_builtin(Builtin function);
 Atom make_int(long x);
 Atom make_sym(const char *s);
 
 Atom cons(Atom car_val, Atom cdr_val);
+
+Atom copy_list(Atom list);
+
+int apply(Atom function, Atom args, Atom *result);
 
 void print_expr(Atom atom);
 

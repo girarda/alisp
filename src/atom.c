@@ -1,6 +1,16 @@
 #include "atom.h"
+#include "error.h"
 #include <string.h>
 #include <stdio.h>
+
+Atom make_builtin(Builtin function) {
+    Atom atom;
+
+    atom.type = AtomType_Builtin;
+    atom.value.builtin = function;
+
+    return atom;
+}
 
 Atom make_int(long x) {
     Atom atom;
@@ -56,8 +66,41 @@ Atom cons(Atom car_val, Atom cdr_val) {
     return atom;
 }
 
+Atom copy_list(Atom list) {
+    Atom atom, p;
+
+    if (is_nil(list)) {
+        return NIL;
+    }
+
+    atom = cons(car(list), NIL);
+    p = atom;
+    list = cdr(list);
+
+    while (!is_nil(list)) {
+        cdr(p) = cons(car(list), NIL);
+        p = cdr(p);
+        list = cdr(list);
+    }
+
+    return atom;
+}
+
+int apply(Atom function, Atom args, Atom *result) {
+    if (function.type == AtomType_Builtin) {
+        return (*function.value.builtin)(args, result);
+    }
+
+    return ERROR_TYPE;
+}
+
 void print_expr(Atom atom) {
     switch(atom.type) {
+    case AtomType_Builtin:
+        printf("#<BUILTIN:%p>", atom.value.builtin);
+    case AtomType_Integer:
+        printf("%ld", atom.value.integer);
+        break;
     case AtomType_Nil:
         printf("NIL");
         break;
@@ -80,9 +123,6 @@ void print_expr(Atom atom) {
         break;
     case AtomType_Symbol:
         printf("%s", atom.value.symbol);
-        break;
-    case AtomType_Integer:
-        printf("%ld", atom.value.integer);
         break;
     }
 }

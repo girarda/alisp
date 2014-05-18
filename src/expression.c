@@ -3,7 +3,7 @@
 #include "error.h"
 
 int eval_expr(Atom expr, Atom env, Atom *result) {
-    Atom op, args;
+    Atom op, args, p;
     Error err;
 
     if (expr.type == AtomType_Symbol) {
@@ -49,7 +49,23 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
             return add_binding_env(env, sym, val);
         }
     }
-    return ERROR_SYNTAX;
+
+    err = eval_expr(op, env, &op);
+    if (err) {
+        return err;
+    }
+
+    /* Evaluate arguments */
+    args = copy_list(args);
+    p = args;
+    while (!is_nil(p)) {
+        err = eval_expr(car(p), env, &car(p));
+        if (err) {
+            return err;
+        }
+        p = cdr(p);
+    }
+    return apply(op, args, result);
 }
 
 int is_valid_expr(Atom expr) {
