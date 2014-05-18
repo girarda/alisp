@@ -131,11 +131,18 @@ int apply(Atom fn, Atom args, Atom *result)
 
     /* Bind the arguments */
     while (!is_nil(arg_names)) {
+        if (arg_names.type == AtomType_Symbol) {
+            add_binding_env(env, arg_names, args);
+            args = NIL;
+            break;
+        }
+
         if (is_nil(args)) {
             return ERROR_ARGS;
         }
+
         add_binding_env(env, car(arg_names), car(args));
-        arg_names = cdr(arg_names);
+        arg_names = cdr(args);
         args = cdr(args);
     }
     if (!is_nil(args)) {

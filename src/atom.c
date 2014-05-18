@@ -58,14 +58,16 @@ void add_symbol_to_table(Atom atom) {
 int make_closure(Atom env, Atom args, Atom body, Atom *result) {
     Atom atom;
 
-    if (!is_valid_expr(args) || !is_valid_expr(body)) {
+    if (!is_valid_expr(body)) {
         return ERROR_SYNTAX;
     }
 
     /* Check argument names are all symbols */
     atom = args;
     while (!is_nil(atom)) {
-        if (car(atom).type != AtomType_Symbol) {
+        if (atom.type == AtomType_Symbol) {
+            break;
+        } else if (atom.type != AtomType_Pair || car(atom).type != AtomType_Symbol) {
             return ERROR_TYPE;
         }
         atom = cdr(atom);
