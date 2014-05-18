@@ -63,11 +63,21 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
             }
 
             sym = car(args);
-            if (sym.type != AtomType_Symbol) {
+            if (sym.type == AtomType_Pair) {
+                err = make_closure(env, cdr(sym), cdr(args), &val);
+                sym = car(sym);
+                if (sym.type != AtomType_Symbol) {
+                    return ERROR_TYPE;
+                }
+            } else if (sym.type == AtomType_Symbol) {
+                if (!is_nil(cdr(cdr(args)))) {
+                    return ERROR_ARGS;
+                }
+                err = eval_expr(car(cdr(args)), env, &val);
+            } else {
                 return ERROR_TYPE;
             }
 
-            err = eval_expr(car(cdr(args)), env, &val);
             if (err) {
                 return err;
             }

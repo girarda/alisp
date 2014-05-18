@@ -7,15 +7,20 @@ int read_expr(const char *input, const char **end, Atom *result) {
     Error err;
 
     err = lex(input, &token, end);
-    if (err)
+    if (err) {
         return err;
+    }
 
-    if (token[0] == '(')
+    if (token[0] == '(') {
         return read_list(*end, end, result);
-    else if (token[0] == ')')
+    } else if (token[0] == ')') {
         return ERROR_SYNTAX;
-    else
+    } else if (token[0] == '\'') {
+        *result = cons(make_sym("QUOTE"), cons(NIL, NIL));
+        return read_expr(*end, end, &car(cdr(*result)));
+    } else {
         return parse_simple(token, *end, result);
+    }
 }
 
 int read_list(const char* start, const char **end, Atom *result) {
@@ -102,7 +107,7 @@ int parse_simple(const char *start, const char *end, Atom *result)
 int lex(const char *str, const char **start, const char **end) {
     const char *ws = " \t\n";
     const char *delim = "() \t\n";
-    const char *prefix = "()";
+    const char *prefix = "()\'";
 
     str += strspn(str, ws);
 
