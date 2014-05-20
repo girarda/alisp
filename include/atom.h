@@ -40,6 +40,7 @@ struct Allocation *global_allocations;
 
 typedef struct Atom Atom;
 
+/* TODO: Assert p is pair ? */
 #define car(p) ((p).value.pair->atom[0])
 #define cdr(p) ((p).value.pair->atom[1])
 #define is_nil(atom) ((atom).type == AtomType_Nil)
@@ -55,14 +56,16 @@ int make_closure(Atom env, Atom args, Atom body, Atom *result);
 
 Atom cons(Atom car_val, Atom cdr_val);
 
-Atom copy_list(Atom list);
-
+int is_pair(Atom atom);
+int is_symbol(Atom atom);
 
 void print_expr(Atom atom);
 
 // private methods
 Atom look_for_symbol(const char *s);
+Atom create_and_add_symbol_to_table(const char *s);
 void add_symbol_to_table(Atom atom);
+
 
 
 #endif

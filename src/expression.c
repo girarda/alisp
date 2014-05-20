@@ -1,6 +1,7 @@
 #include "expression.h"
 #include "environment.h"
 #include "error.h"
+#include "gc.h"
 
 int eval_expr(Atom expr, Atom env, Atom *result) {
     static int count = 0;

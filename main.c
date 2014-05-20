@@ -7,6 +7,7 @@
 #include "parser.h"
 #include "environment.h"
 #include "builtin.h"
+#include "expression.h"
 
 int main(int argc, char **argv)
 {

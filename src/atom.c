@@ -1,6 +1,7 @@
 #include "atom.h"
 #include "expression.h"
 #include "error.h"
+#include "util.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -30,9 +31,7 @@ Atom make_sym(const char *s) {
     atom = look_for_symbol(s);
 
     if (is_nil(atom)) {
-        atom.type = AtomType_Symbol;
-        atom.value.symbol = strdup(s);
-        add_symbol_to_table(atom);
+        return create_and_add_symbol_to_table(s);
     }
 
     return atom;
@@ -44,12 +43,20 @@ Atom look_for_symbol(const char *s) {
     existing_symbol = sym_table;
     while(!is_nil(existing_symbol)) {
         atom = car(existing_symbol);
-        if (strcmp(atom.value.symbol, s) == 0) {
+        if (is_same_string(atom.value.symbol, s)) {
             return atom;
         }
         existing_symbol = cdr(existing_symbol);
     }
     return existing_symbol;
+}
+
+Atom create_and_add_symbol_to_table(const char *s) {
+    Atom atom;
+    atom.type = AtomType_Symbol;
+    atom.value.symbol = strdup(s);
+    add_symbol_to_table(atom);
+    return atom;
 }
 
 void add_symbol_to_table(Atom atom) {
@@ -69,7 +76,7 @@ int make_closure(Atom env, Atom args, Atom body, Atom *result) {
     while (!is_nil(atom)) {
         if (atom.type == AtomType_Symbol) {
             break;
-        } else if (atom.type != AtomType_Pair || car(atom).type != AtomType_Symbol) {
+        } else if (!is_pair(atom) || !is_symbol(car(atom))) {
             return ERROR_TYPE;
         }
         atom = cdr(atom);
@@ -98,33 +105,27 @@ Atom cons(Atom car_val, Atom cdr_val) {
     return atom;
 }
 
-Atom copy_list(Atom list) {
-    Atom atom, p;
-
-    if (is_nil(list)) {
-        return NIL;
-    }
-
-    atom = cons(car(list), NIL);
-    p = atom;
-    list = cdr(list);
-
-    while (!is_nil(list)) {
-        cdr(p) = cons(car(list), NIL);
-        p = cdr(p);
-        list = cdr(list);
-    }
-
-    return atom;
+int is_pair(Atom atom) {
+    return atom.type == AtomType_Pair;
 }
 
+int is_symbol(Atom atom) {
+    return atom.type == AtomType_Symbol;
+}
 
 void print_expr(Atom atom) {
     switch(atom.type) {
     case AtomType_Builtin:
         printf("#<BUILTIN:%p>", atom.value.builtin);
+        break;
+    case AtomType_Closure:
+        printf("#<CLOSURE:%p>", atom.value.builtin);
+        break;
     case AtomType_Integer:
         printf("%ld", atom.value.integer);
+        break;
+    case AtomType_Macro:
+        printf("#<MACRO:%p>", atom.value.builtin);
         break;
     case AtomType_Nil:
         printf("NIL");
