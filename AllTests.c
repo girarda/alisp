@@ -14,6 +14,7 @@ void RunAllTests(void)
     //CuSuiteAddSuite(suite, CuGetSuite());
     //CuSuiteAddSuite(suite, CuStringGetSuite());
     CuSuiteAddSuite(suite, AtomGetSuite());
+    CuSuiteAddSuite(suite, EnvironmentGetSuite());
 
 	CuSuiteRun(suite);
 	CuSuiteSummary(suite, output);

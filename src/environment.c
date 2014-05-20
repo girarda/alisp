@@ -1,5 +1,6 @@
 #include "environment.h"
 #include "error.h"
+#include "util.h"
 
 Atom create_env(Atom parent) {
     return cons(parent, NIL);
@@ -9,9 +10,10 @@ int retrieve_env(Atom env, Atom symbol, Atom *result) {
     Atom parent = car(env);
     Atom bs = cdr(env);
 
+    /* TODO: Refactor me! */
     while (!is_nil(bs)) {
         Atom b = car(bs);
-        if (car(b).value.symbol == symbol.value.symbol) {
+        if (is_same_string(car(b).value.symbol, symbol.value.symbol)) {
             *result = cdr(b);
             return ERROR_OK;
         }
@@ -30,7 +32,7 @@ int add_binding_env(Atom env, Atom symbol, Atom value) {
 
     while (!is_nil(bs)) {
         b = car(bs);
-        if (car(b).value.symbol == symbol.value.symbol) {
+        if (is_same_string(car(b).value.symbol, symbol.value.symbol)) {
             cdr(b) = value;
             return ERROR_OK;
         }
