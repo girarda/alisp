@@ -56,8 +56,12 @@ int make_closure(Atom env, Atom args, Atom body, Atom *result);
 
 Atom cons(Atom car_val, Atom cdr_val);
 
+int is_closure(Atom atom);
+int is_macro(Atom atom);
 int is_pair(Atom atom);
 int is_symbol(Atom atom);
+
+int has_children(Atom atom);
 
 void print_expr(Atom atom);
 

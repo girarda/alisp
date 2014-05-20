@@ -105,12 +105,24 @@ Atom cons(Atom car_val, Atom cdr_val) {
     return atom;
 }
 
+int is_closure(Atom atom) {
+    return atom.type == AtomType_Closure;
+}
+
+int is_macro(Atom atom) {
+    return atom.type == AtomType_Macro;
+}
+
 int is_pair(Atom atom) {
     return atom.type == AtomType_Pair;
 }
 
 int is_symbol(Atom atom) {
     return atom.type == AtomType_Symbol;
+}
+
+int has_children(Atom atom) {
+    return is_closure(atom) || is_macro(atom) || is_pair(atom);
 }
 
 void print_expr(Atom atom) {

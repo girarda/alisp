@@ -1,48 +1,51 @@
 #include "gc.h"
 #include "stddef.h"
 
+/* TODO: TEST ME! */
+
 void gc() {
-    struct Allocation *a, **p;
-
     gc_mark(sym_table);
-
-    /* Free unmarked allocations */
-    p = &global_allocations;
-    while (*p != NULL) {
-        a = *p;
-        if (!a->mark) {
-            *p = a->next;
-            free(a);
-        } else {
-            p = &a->next;
-        }
-    }
-
-    /* Clear marks */
-    a = global_allocations;
-    while (a != NULL) {
-        a->mark = 0;
-        a = a->next;
-    }
+    gc_free_unmarked();
+    gc_clear_marks();
 }
 
 void gc_mark(Atom root) {
-    struct Allocation *a;
+    if (has_children(root)) {
+        struct Allocation *alloc = get_allocation(root);
 
-    if (!(root.type == AtomType_Pair
-        || root.type == AtomType_Closure
-        || root.type == AtomType_Macro))
-        return;
+        if (!alloc->mark) {
+            alloc->mark = 1;
+            gc_mark(car(root));
+            gc_mark(cdr(root));
+        }
+    }
+}
 
-    a = (struct Allocation *)
-        ((char *) root.value.pair
-            - offsetof(struct Allocation, pair));
+void gc_free_unmarked() {
+    struct Allocation *alloc;
+    struct Allocation **ptr_alloc = &global_allocations;
 
-    if (a->mark)
-        return;
+    while (*ptr_alloc != NULL) {
+        alloc = *ptr_alloc;
+        if (!alloc->mark) {
+            *ptr_alloc = alloc->next;
+            free(alloc);
+        } else {
+            ptr_alloc = &alloc->next;
+        }
+    }
+}
 
-    a->mark = 1;
+void gc_clear_marks() {
+    struct Allocation *alloc = global_allocations;
+    while (alloc != NULL) {
+        alloc->mark = 0;
+        alloc = alloc->next;
+    }
+}
 
-    gc_mark(car(root));
-    gc_mark(cdr(root));
+struct Allocation * get_allocation(Atom root) {
+    return (struct Allocation *)
+            ((char *) root.value.pair
+                - offsetof(struct Allocation, pair));
 }

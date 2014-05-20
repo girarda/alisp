@@ -215,6 +215,46 @@ void test_is_nil_returns_false_if_not_nil(CuTest* tc) {
     CuAssertTrue(tc, !is_pair(atom));
 }
 
+void test_is_closure_returns_true_if_atom_is_closure(CuTest* tc) {
+    Atom env, args, body, result;
+    env = create_env(NIL);
+    args = cons(make_sym("make_int(42)"), make_sym("hello"));
+    body = NIL;
+
+    make_closure(env, args, body, &result);
+
+    CuAssertTrue(tc, is_closure(result));
+}
+
+void test_is_closure_returns_false_if_not_closure(CuTest* tc) {
+    Atom atom = make_int(42);
+    CuAssertTrue(tc, !is_closure(atom));
+}
+
+void test_is_macro_returns_true_if_atom_is_macro(CuTest* tc) {
+    Atom env, args, body, result;
+    env = create_env(NIL);
+    args = cons(make_sym("make_int(42)"), make_sym("hello"));
+    body = NIL;
+
+    make_closure(env, args, body, &result);
+    result.type = AtomType_Macro;
+
+    CuAssertTrue(tc, is_macro(result));
+
+}
+
+void test_is_macro_returns_false_if_atom_is_not_macro(CuTest* tc) {
+    Atom env, args, body, result;
+    env = create_env(NIL);
+    args = cons(make_sym("make_int(42)"), make_sym("hello"));
+    body = NIL;
+
+    make_closure(env, args, body, &result);
+
+    CuAssertTrue(tc, !is_macro(result));
+}
+
 void test_is_pair_returns_true_if_atom_is_pair(CuTest* tc) {
     Atom first = make_int(24);
     Atom second = make_int(42);
@@ -239,6 +279,42 @@ void test_is_symbol_returns_false_if_atom_is_not_symbol(CuTest* tc) {
     Atom atom = make_int(24);
 
     CuAssertTrue(tc, !is_symbol(atom));
+}
+
+void test_has_children_returns_true_if_atom_is_closure(CuTest* tc) {
+    Atom env, args, body, result;
+    env = create_env(NIL);
+    args = cons(make_sym("make_int(42)"), make_sym("hello"));
+    body = NIL;
+
+    make_closure(env, args, body, &result);
+
+    CuAssertTrue(tc, has_children(result));
+}
+
+void test_has_children_returns_true_if_atom_is_macro(CuTest* tc) {
+    Atom env, args, body, result;
+    env = create_env(NIL);
+    args = cons(make_sym("make_int(42)"), make_sym("hello"));
+    body = NIL;
+
+    make_closure(env, args, body, &result);
+    result.type = AtomType_Macro;
+
+    CuAssertTrue(tc, has_children(result));
+}
+
+void test_has_children_returns_true_if_atom_is_pair(CuTest* tc) {
+    Atom first = make_int(24);
+    Atom second = make_int(42);
+    Atom pair = cons(first, second);
+
+    CuAssertTrue(tc, has_children(pair));
+}
+
+void test_has_children_returns_false_if_atom_is_not_closure_nor_macro_nor_pair(CuTest* tc) {
+    Atom atom = make_int(24);
+    CuAssertTrue(tc, !has_children(atom));
 }
 
 CuSuite* AtomGetSuite(void)
@@ -288,6 +364,14 @@ CuSuite* AtomGetSuite(void)
     SUITE_ADD_TEST(suite, test_is_nil_returns_true_if_nil);
     SUITE_ADD_TEST(suite, test_is_nil_returns_false_if_not_nil);
 
+    /* is_closure */
+    SUITE_ADD_TEST(suite, test_is_closure_returns_true_if_atom_is_closure);
+    SUITE_ADD_TEST(suite, test_is_pair_returns_false_if_atom_is_not_pair);
+
+    /* is_macro */
+    SUITE_ADD_TEST(suite, test_is_macro_returns_true_if_atom_is_macro);
+    SUITE_ADD_TEST(suite, test_is_macro_returns_false_if_atom_is_not_macro);
+
     /* is_pair */
     SUITE_ADD_TEST(suite, test_is_pair_returns_true_if_atom_is_pair);
     SUITE_ADD_TEST(suite, test_is_pair_returns_false_if_atom_is_not_pair);
@@ -296,6 +380,11 @@ CuSuite* AtomGetSuite(void)
     SUITE_ADD_TEST(suite, test_is_symbol_returns_true_if_atom_is_symbol);
     SUITE_ADD_TEST(suite, test_is_symbol_returns_false_if_atom_is_not_symbol);
 
+    /* has_children */
+    SUITE_ADD_TEST(suite, test_has_children_returns_true_if_atom_is_closure);
+    SUITE_ADD_TEST(suite, test_has_children_returns_true_if_atom_is_macro);
+    SUITE_ADD_TEST(suite, test_has_children_returns_true_if_atom_is_pair);
+    SUITE_ADD_TEST(suite, test_has_children_returns_false_if_atom_is_not_closure_nor_macro_nor_pair);
 
     return suite;
 }
