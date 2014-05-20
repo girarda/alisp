@@ -1,6 +1,7 @@
 #include <string.h>
 #include "parser.h"
 #include "error.h"
+#include "util.h"
 
 int read_expr(const char *input, const char **end, Atom *result) {
     const char *token;
@@ -77,29 +78,42 @@ int read_list(const char* start, const char **end, Atom *result) {
 
 int parse_simple(const char *start, const char *end, Atom *result)
 {
-    char *buf, *p;
-
-    /* Is it an integer? */
-    long val = strtol(start, &p, 10);
-    if (p == end) {
-        result->type = AtomType_Integer;
-        result->value.integer = val;
+    Error is_integer = parse_integer(start, end, result);
+    if (ERROR_OK == is_integer) {
         return ERROR_OK;
     }
 
-    /* NIL or symbol */
-    buf = malloc(end - start + 1);
-    p = buf;
-    while (start != end)
-        *p++ = toupper(*start), ++start;
-    *p = '\0';
+    return parse_symbol_or_nil(start, end, result);
+}
 
-    if (strcmp(buf, "NIL") == 0)
+int parse_integer(const char *start, const char *end, Atom *result) {
+    char *ptr;
+    long val = strtol(start, &ptr, 10);
+
+    if (ptr == end) {
+        *result = make_int(val);
+        return ERROR_OK;
+    }
+    return ERROR_SYNTAX;
+}
+
+int parse_symbol_or_nil(const char *start, const char *end, Atom *result) {
+    char *buffer;
+    char *ptr;
+
+    buffer = malloc(end - start + 1);
+    ptr = buffer;
+    while (start != end) {
+        *ptr++ = toupper(*start);
+        ++start;
+    }
+
+    if (is_same_string(buffer, "NIL"))
         *result = NIL;
     else
-        *result = make_sym(buf);
+        *result = make_sym(buffer);
 
-    free(buf);
+    free(buffer);
 
     return ERROR_OK;
 }
@@ -118,10 +132,14 @@ int lex(const char *str, const char **start, const char **end) {
 
     *start = str;
 
-    if (strchr(prefix, str[0]) != NULL)
+    if (starts_with_prefix(str, prefix))
         *end = str + 1;
     else
         *end = str + strcspn(str, delim);
 
     return ERROR_OK;
+}
+
+int starts_with_prefix(const char *str, const char* prefix) {
+    return strchr(prefix, str[0]) != NULL;
 }
