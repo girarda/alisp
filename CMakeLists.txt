@@ -27,8 +27,8 @@ file(GLOB_RECURSE files_INC
 )
 
 # Build test
-add_executable(unit_test AllTests.c ${files_SRC} ${files_INC})
-target_link_libraries(unit_test m edit)
+add_executable(unittests AllTests.c ${files_SRC} ${files_INC})
+target_link_libraries(unittests m edit)
 
 # Build the real deal
 add_executable(alisp main.c ${files_SRC} ${files_INC})
