@@ -2,13 +2,15 @@
 __alisp__ is an implementation of Lisp in C. The implementation contains a mark-and-sweep garbage collector and function continuation.
 
 ## Compile
-* `make gen-cmake` to produce the necessary cmake
-* `make check` to compile and run the unit tests
+Execute the following commands in order to compile and run the unit tests.
+    $ make check gen-cmake
+    $ make check
 
 ## To do
 * Add missing unit tests for expression.c
-* Add missing unit tests for gc.c
+* Add integration tests for gc.c
 * Add missing unit tests for parser.c
+* Add missing unit tests for builtin.c
 * Assert type in add_symbol_to_table + test
 * Assert atom is pair in car/cdr + test
 * Add useful error messages through macros
@@ -32,4 +34,14 @@ __alisp__ is an implementation of Lisp in C. The implementation contains a mark-
 * Static typing ?
 * Use hashtable for environment?
 * Exit function for stopping the prompt and exit cleanly
+* Add language features documentation
 
+Further Reading
+---------------
+Here are some references that helped me implement __alisp__ 
+1. http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/
+2. http://www.buildyourownlisp.com/contents
+3. http://www.lwh.jp/lisp/
+4. http://jozefg.bitbucket.org/posts/2014-05-05-i-used-c-correctly.html
+5. http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
+6. https://github.com/rui314/minilisp
