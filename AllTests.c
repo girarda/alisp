@@ -16,6 +16,7 @@ void RunAllTests(void)
     CuSuiteAddSuite(suite, AtomGetSuite());
     CuSuiteAddSuite(suite, EnvironmentGetSuite());
     CuSuiteAddSuite(suite, ParserGetSuite());
+    CuSuiteAddSuite(suite, GcGetSuite());
 
 	CuSuiteRun(suite);
 	CuSuiteSummary(suite, output);

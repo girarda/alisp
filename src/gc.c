@@ -1,7 +1,7 @@
 #include "gc.h"
 #include "stddef.h"
 
-/* TODO: TEST ME! */
+/* TODO: Make integration test for whole gc */
 
 void gc() {
     gc_mark(sym_table);

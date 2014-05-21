@@ -241,7 +241,6 @@ void test_is_macro_returns_true_if_atom_is_macro(CuTest* tc) {
     result.type = AtomType_Macro;
 
     CuAssertTrue(tc, is_macro(result));
-
 }
 
 void test_is_macro_returns_false_if_atom_is_not_macro(CuTest* tc) {
