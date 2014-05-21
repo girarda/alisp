@@ -12,11 +12,11 @@ int read_expr(const char *input, const char **end, Atom *result) {
         return err;
     }
 
-    if (token[0] == '(') {
+    if (token[0] == '(') { /* TODO: Test this case */
         return read_list(*end, end, result);
     } else if (token[0] == ')') {
         return ERROR_SYNTAX;
-    } else if (token[0] == '\'') {
+    } else if (token[0] == '\'') { /* TODO: Test this case */
         *result = cons(make_sym("QUOTE"), cons(NIL, NIL));
         return read_expr(*end, end, &car(cdr(*result)));
     } else {
@@ -25,10 +25,11 @@ int read_expr(const char *input, const char **end, Atom *result) {
 }
 
 int read_list(const char* start, const char **end, Atom *result) {
-    Atom p;
+    /* Test this method */
+    Atom atom;
 
     *end = start;
-    p = *result = NIL;
+    atom = *result = NIL;
 
     for (;;) {
         const char *token;
@@ -36,42 +37,48 @@ int read_list(const char* start, const char **end, Atom *result) {
         Error err;
 
         err = lex(*end, &token, end);
-        if (err)
+        if (err) {
             return err;
+        }
 
-        if (token[0] == ')')
+        if (token[0] == ')') {
             return ERROR_OK;
+        }
 
         if (token[0] == '.' && *end - token == 1) {
             /* Improper list */
-            if (is_nil(p))
+            if (is_nil(atom)) {
                 return ERROR_SYNTAX;
+            }
 
             err = read_expr(*end, end, &item);
-            if (err)
+            if (err) {
                 return err;
+            }
 
-            cdr(p) = item;
+            cdr(atom) = item;
 
             /* Read the closing ')' */
             err = lex(*end, &token, end);
-            if (!err && token[0] != ')')
+            if (!err && token[0] != ')') {
                 err = ERROR_SYNTAX;
+            }
 
             return err;
         }
 
         err = read_expr(token, end, &item);
-        if (err)
+        if (err) {
             return err;
+        }
 
-        if (is_nil(p)) {
+        if (is_nil(atom)) {
             /* First item */
             *result = cons(item, NIL);
-            p = *result;
+            atom = *result;
         } else {
-            cdr(p) = cons(item, NIL);
-            p = cdr(p);
+            cdr(atom) = cons(item, NIL);
+            atom = cdr(atom);
         }
     }
 }
@@ -119,11 +126,11 @@ int parse_symbol_or_nil(const char *start, const char *end, Atom *result) {
 }
 
 int lex(const char *str, const char **start, const char **end) {
-    const char *ws = " \t\n";
-    const char *delim = "() \t\n";
+    const char *word_stop = " \t\n";
+    const char *delimiter = "() \t\n";
     const char *prefix = "()\'";
 
-    str += strspn(str, ws);
+    str += strspn(str, word_stop);
 
     if (str[0] == '\0') {
         *start = *end = NULL;
@@ -133,9 +140,10 @@ int lex(const char *str, const char **start, const char **end) {
     *start = str;
 
     if (starts_with_prefix(str, prefix))
+        /* Skip prefix */
         *end = str + 1;
     else
-        *end = str + strcspn(str, delim);
+        *end = str + strcspn(str, delimiter);
 
     return ERROR_OK;
 }
