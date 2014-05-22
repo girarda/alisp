@@ -8,6 +8,7 @@
 #include "environment.h"
 #include "builtin.h"
 #include "expression.h"
+#include "gc.h"
 
 int main(int argc, char **argv)
 {
@@ -32,6 +33,12 @@ int main(int argc, char **argv)
     add_binding_env(env, make_sym("<"), make_builtin(builtin_less));
 
     while ((input = readline("> ")) != NULL) {
+        if (strcmp(input, "exit") == 0 ) {
+            gc_clear_marks();
+            gc_free_unmarked();
+            free(input);
+            return 0;
+        }
         add_history(input);
         const char *p = input;
         Error err;
@@ -39,8 +46,9 @@ int main(int argc, char **argv)
 
         err = read_expr(p, &p, &expr);
 
-        if (!err)
+        if (!err) {
             err = eval_expr(expr, env, &result);
+        }
 
         switch (err) {
         case ERROR_OK:
@@ -60,8 +68,6 @@ int main(int argc, char **argv)
             puts("Symbol not bound");
             break;
         }
-
-
         free(input);
     }
 
