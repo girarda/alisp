@@ -29,6 +29,8 @@ void gc_free_unmarked() {
         alloc = *ptr_alloc;
         if (!alloc->mark) {
             *ptr_alloc = alloc->next;
+            free_symbol_if_atom_symbol(alloc->pair.atom[0]);
+            free_symbol_if_atom_symbol(alloc->pair.atom[1]);
             free(alloc);
         } else {
             ptr_alloc = &alloc->next;
@@ -48,4 +50,10 @@ struct Allocation * get_allocation(Atom root) {
     return (struct Allocation *)
             ((char *) root.value.pair
                 - offsetof(struct Allocation, pair));
+}
+
+void free_symbol_if_atom_symbol(Atom atom) {
+    if(is_symbol(atom)) {
+        free(atom.value.symbol);
+    }
 }

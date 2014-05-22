@@ -56,6 +56,7 @@ Atom create_and_add_symbol_to_table(const char *s) {
     atom.type = AtomType_Symbol;
     atom.value.symbol = strdup(s);
     add_symbol_to_table(atom);
+
     return atom;
 }
 
