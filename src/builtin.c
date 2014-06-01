@@ -101,7 +101,6 @@ int builtin_multiply(Atom args, Atom *result) {
 }
 
 int builtin_divide(Atom args, Atom *result) {
-    //TODO Assert no division by 0
     Atom a, b;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
@@ -113,6 +112,10 @@ int builtin_divide(Atom args, Atom *result) {
 
     if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
         return ERROR_TYPE;
+    }
+
+    if (b.value.integer == 0) {
+        return ERROR_ARGS;
     }
 
     *result = make_int(a.value.integer / b.value.integer);

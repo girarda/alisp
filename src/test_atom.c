@@ -316,8 +316,7 @@ void test_has_children_returns_false_if_atom_is_not_closure_nor_macro_nor_pair(C
     CuAssertTrue(tc, !has_children(atom));
 }
 
-CuSuite* AtomGetSuite(void)
-{
+CuSuite* AtomGetSuite(void) {
     CuSuite* suite = CuSuiteNew();
 
     /* make_builtin */

@@ -2,9 +2,8 @@
 
 #include "CuTest.h"
 
-//CuSuite* CuGetSuite();
-//CuSuite* CuStringGetSuite();
-CuSuite* AtomGetSuite();
+CuSuite* CuGetSuite();
+CuSuite* CuStringGetSuite();
 
 void RunAllTests(void)
 {
@@ -14,6 +13,7 @@ void RunAllTests(void)
     //CuSuiteAddSuite(suite, CuGetSuite());
     //CuSuiteAddSuite(suite, CuStringGetSuite());
     CuSuiteAddSuite(suite, AtomGetSuite());
+    CuSuiteAddSuite(suite, BuiltinGetSuite());
     CuSuiteAddSuite(suite, EnvironmentGetSuite());
     CuSuiteAddSuite(suite, ParserGetSuite());
     CuSuiteAddSuite(suite, GcGetSuite());
