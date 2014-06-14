@@ -22,6 +22,7 @@ void test_builtin_car_returns_ERROR_ARGS_if_args_is_not_a_cons_of_cons(CuTest* t
     int result = builtin_car(atom, &atom_car);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_car.type);
 }
 
 void test_builtin_car_returns_the_first_element_of_a_pair(CuTest* tc) {
@@ -65,6 +66,7 @@ void test_builtin_cdr_returns_ERROR_ARGS_if_args_is_not_a_cons_of_cons(CuTest* t
     int result = builtin_cdr(atom, &atom_cdr);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_cdr.type);
 }
 
 void test_builtin_cdr_returns_the_first_element_of_a_pair(CuTest* tc) {
@@ -95,6 +97,7 @@ void test_builtin_cons_returns_ERROR_ARGS_if_args_is_NIL(CuTest* tc) {
     int result = builtin_cons(NIL, &atom_cons);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, atom_cons.type == AtomType_Error);
 }
 
 void test_builtin_cons_returns_ERROR_OK(CuTest* tc) {
@@ -126,16 +129,18 @@ void test_builtin_add_returns_ERROR_ARGS_if_only_one_arg(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, NIL);
 
-    Atom atom_cons;
-    int result = builtin_add(args, &atom_cons);
+    Atom atom_add;
+    int result = builtin_add(args, &atom_add);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, atom_add.type == AtomType_Error);
 }
 
 void test_builtin_add_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
-    Atom atom_cons;
-    int result = builtin_add(NIL, &atom_cons);
+    Atom atom_add;
+    int result = builtin_add(NIL, &atom_add);
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, atom_add.type == AtomType_Error);
 }
 
 void test_builtin_add_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
@@ -145,10 +150,11 @@ void test_builtin_add_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
 
     Atom args = cons(first, cons(second,third));
 
-    Atom atom_cons;
-    int result = builtin_add(args, &atom_cons);
+    Atom atom_add;
+    int result = builtin_add(args, &atom_add);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, atom_add.type == AtomType_Error);
 }
 
 void test_builtin_add_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -167,20 +173,22 @@ void test_builtin_add_returns_ERROR_TYPE_if_first_arg_is_not_integer(CuTest* tc)
     Atom second = make_int(42);
     Atom args = cons(NIL, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_add(args, &atom_cons);
+    Atom atom_add;
+    int result = builtin_add(args, &atom_add);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, atom_add.type == AtomType_Error);
 }
 
 void test_builtin_add_returns_ERROR_TYPE_if_second_arg_is_not_integer(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, cons(NIL, NIL));
 
-    Atom atom_cons;
-    int result = builtin_add(args, &atom_cons);
+    Atom atom_add;
+    int result = builtin_add(args, &atom_add);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, atom_add.type == AtomType_Error);
 }
 
 void test_builtin_add_returns_sum_of_two_integers(CuTest* tc) {
@@ -199,17 +207,19 @@ void test_builtin_substract_returns_ERROR_ARGS_if_only_one_arg(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, NIL);
 
-    Atom atom_cons;
-    int result = builtin_substract(args, &atom_cons);
+    Atom atom_sub;
+    int result = builtin_substract(args, &atom_sub);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_sub.type);
 }
 
 void test_builtin_substract_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
-    Atom atom_cons;
-    int result = builtin_substract(NIL, &atom_cons);
+    Atom atom_sub;
+    int result = builtin_substract(NIL, &atom_sub);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_sub.type);
 }
 
 void test_builtin_substract_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
@@ -219,10 +229,11 @@ void test_builtin_substract_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc)
 
     Atom args = cons(first, cons(second,third));
 
-    Atom atom_cons;
-    int result = builtin_substract(args, &atom_cons);
+    Atom atom_sub;
+    int result = builtin_substract(args, &atom_sub);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_sub.type);
 }
 
 void test_builtin_substract_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -241,20 +252,22 @@ void test_builtin_substract_returns_ERROR_TYPE_if_first_arg_is_not_integer(CuTes
     Atom second = make_int(42);
     Atom args = cons(NIL, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_substract(args, &atom_cons);
+    Atom atom_sub;
+    int result = builtin_substract(args, &atom_sub);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_sub.type);
 }
 
 void test_builtin_substract_returns_ERROR_TYPE_if_second_arg_is_not_integer(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, cons(NIL, NIL));
 
-    Atom atom_cons;
-    int result = builtin_substract(args, &atom_cons);
+    Atom atom_sub;
+    int result = builtin_substract(args, &atom_sub);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_sub.type);
 }
 
 void test_builtin_substract_returns_difference_of_two_integers(CuTest* tc) {
@@ -273,16 +286,19 @@ void test_builtin_multiply_returns_ERROR_ARGS_if_only_one_arg(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, NIL);
 
-    Atom atom_cons;
-    int result = builtin_multiply(args, &atom_cons);
+    Atom atom_mul;
+    int result = builtin_multiply(args, &atom_mul);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_mul.type);
 }
 
 void test_builtin_multiply_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
-    Atom atom_cons;
-    int result = builtin_multiply(NIL, &atom_cons);
+    Atom atom_mul;
+    int result = builtin_multiply(NIL, &atom_mul);
+
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_mul.type);
 }
 
 void test_builtin_multiply_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
@@ -292,10 +308,11 @@ void test_builtin_multiply_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) 
 
     Atom args = cons(first, cons(second,third));
 
-    Atom atom_cons;
-    int result = builtin_multiply(args, &atom_cons);
+    Atom atom_mul;
+    int result = builtin_multiply(args, &atom_mul);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_mul.type);
 }
 
 void test_builtin_multiply_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -314,20 +331,22 @@ void test_builtin_multiply_returns_ERROR_TYPE_if_first_arg_is_not_integer(CuTest
     Atom second = make_int(42);
     Atom args = cons(NIL, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_multiply(args, &atom_cons);
+    Atom atom_mul;
+    int result = builtin_multiply(args, &atom_mul);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_mul.type);
 }
 
 void test_builtin_multiply_returns_ERROR_TYPE_if_second_arg_is_not_integer(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, cons(NIL, NIL));
 
-    Atom atom_cons;
-    int result = builtin_multiply(args, &atom_cons);
+    Atom atom_mul;
+    int result = builtin_multiply(args, &atom_mul);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_mul.type);
 }
 
 void test_builtin_multiply_returns_multiplication_of_two_integers(CuTest* tc) {
@@ -336,26 +355,31 @@ void test_builtin_multiply_returns_multiplication_of_two_integers(CuTest* tc) {
 
     Atom args = cons(first, cons(second, NIL));
 
-    Atom atom_cons;
-    builtin_multiply(args, &atom_cons);
+    Atom atom_mul;
+    builtin_multiply(args, &atom_mul);
 
-    CuAssertTrue(tc, 6 == atom_cons.value.integer);
+    CuAssertTrue(tc, 6 == atom_mul.value.integer);
 }
 
 void test_builtin_divide_returns_ERROR_ARGS_if_only_one_arg(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, NIL);
 
-    Atom atom_cons;
-    int result = builtin_multiply(args, &atom_cons);
+    Atom atom_div;
+    int result = builtin_multiply(args, &atom_div);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_div.type);
 }
 
 void test_builtin_divide_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
-    Atom atom_cons;
-    int result = builtin_divide(NIL, &atom_cons);
+    Atom atom_div;
+
+    int result = builtin_divide(NIL, &atom_div);
+
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_div.type);
+
 }
 
 void test_builtin_divide_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
@@ -365,10 +389,11 @@ void test_builtin_divide_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
 
     Atom args = cons(first, cons(second,third));
 
-    Atom atom_cons;
-    int result = builtin_divide(args, &atom_cons);
+    Atom atom_div;
+    int result = builtin_divide(args, &atom_div);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_div.type);
 }
 
 void test_builtin_divide_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -387,20 +412,22 @@ void test_builtin_divide_returns_ERROR_TYPE_if_first_arg_is_not_integer(CuTest* 
     Atom second = make_int(42);
     Atom args = cons(NIL, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_divide(args, &atom_cons);
+    Atom atom_div;
+    int result = builtin_divide(args, &atom_div);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_div.type);
 }
 
 void test_builtin_divide_returns_ERROR_TYPE_if_second_arg_is_not_integer(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, cons(NIL, NIL));
 
-    Atom atom_cons;
-    int result = builtin_divide(args, &atom_cons);
+    Atom atom_div;
+    int result = builtin_divide(args, &atom_div);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_div.type);
 }
 
 void test_builtin_divide_returns_division_of_two_integers(CuTest* tc) {
@@ -409,10 +436,10 @@ void test_builtin_divide_returns_division_of_two_integers(CuTest* tc) {
 
     Atom args = cons(first, cons(second, NIL));
 
-    Atom atom_cons;
-    builtin_divide(args, &atom_cons);
+    Atom atom_div;
+    builtin_divide(args, &atom_div);
 
-    CuAssertTrue(tc, 2 == atom_cons.value.integer);
+    CuAssertTrue(tc, 2 == atom_div.value.integer);
 }
 
 void test_builtin_divide_returns_ERROR_ARGS_if_second_arg_is_zero(CuTest* tc) {
@@ -421,26 +448,31 @@ void test_builtin_divide_returns_ERROR_ARGS_if_second_arg_is_zero(CuTest* tc) {
 
     Atom args = cons(first, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_divide(args, &atom_cons);
+    Atom atom_div;
+    int result = builtin_divide(args, &atom_div);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_div.type);
 }
 
 void test_builtin_numeq_returns_ERROR_ARGS_if_only_one_arg(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, NIL);
 
-    Atom atom_cons;
-    int result = builtin_numeq(args, &atom_cons);
+    Atom atom_numeq;
+    int result = builtin_numeq(args, &atom_numeq);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_numeq.type);
 }
 
 void test_builtin_numeq_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
-    Atom atom_cons;
-    int result = builtin_numeq(NIL, &atom_cons);
+    Atom atom_numeq;
+
+    int result = builtin_numeq(NIL, &atom_numeq);
+
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_numeq.type);
 }
 
 void test_builtin_numeq_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
@@ -450,10 +482,11 @@ void test_builtin_numeq_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
 
     Atom args = cons(first, cons(second,third));
 
-    Atom atom_cons;
-    int result = builtin_numeq(args, &atom_cons);
+    Atom atom_numeq;
+    int result = builtin_numeq(args, &atom_numeq);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_numeq.type);
 }
 
 void test_builtin_numeq_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -462,8 +495,8 @@ void test_builtin_numeq_returns_ERROR_OK_if_two_args(CuTest* tc) {
 
     Atom args = cons(first, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_numeq(args, &atom_cons);
+    Atom atom_numeq;
+    int result = builtin_numeq(args, &atom_numeq);
 
     CuAssertTrue(tc, ERROR_OK == result);
 }
@@ -472,20 +505,22 @@ void test_builtin_numeq_returns_ERROR_TYPE_if_first_arg_is_not_integer(CuTest* t
     Atom second = make_int(42);
     Atom args = cons(NIL, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_numeq(args, &atom_cons);
+    Atom atom_numeq;
+    int result = builtin_numeq(args, &atom_numeq);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_numeq.type);
 }
 
 void test_builtin_numeq_returns_ERROR_TYPE_if_second_arg_is_not_integer(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, cons(NIL, NIL));
 
-    Atom atom_cons;
-    int result = builtin_numeq(args, &atom_cons);
+    Atom atom_numeq;
+    int result = builtin_numeq(args, &atom_numeq);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_numeq.type);
 }
 
 void test_builtin_numeq_returns_true_if_two_integers_are_equals(CuTest* tc) {
@@ -494,10 +529,10 @@ void test_builtin_numeq_returns_true_if_two_integers_are_equals(CuTest* tc) {
 
     Atom args = cons(first, cons(second, NIL));
 
-    Atom atom_cons;
-    builtin_numeq(args, &atom_cons);
+    Atom atom_numeq;
+    builtin_numeq(args, &atom_numeq);
 
-    CuAssertTrue(tc, is_same_string("T", atom_cons.value.symbol));
+    CuAssertTrue(tc, is_same_string("T", atom_numeq.value.symbol));
 }
 
 void test_builtin_numeq_returns_NIL_if_two_integers_are_not_equals(CuTest* tc) {
@@ -506,26 +541,30 @@ void test_builtin_numeq_returns_NIL_if_two_integers_are_not_equals(CuTest* tc) {
 
     Atom args = cons(first, cons(second, NIL));
 
-    Atom atom_cons;
-    builtin_numeq(args, &atom_cons);
+    Atom atom_numeq;
+    builtin_numeq(args, &atom_numeq);
 
-    CuAssertTrue(tc, is_nil(atom_cons));
+    CuAssertTrue(tc, is_nil(atom_numeq));
 }
 
 void test_builtin_less_returns_ERROR_ARGS_if_only_one_arg(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, NIL);
 
-    Atom atom_cons;
-    int result = builtin_less(args, &atom_cons);
+    Atom atom_less;
+    int result = builtin_less(args, &atom_less);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_less.type);
 }
 
 void test_builtin_less_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
-    Atom atom_cons;
-    int result = builtin_less(NIL, &atom_cons);
+    Atom atom_less;
+
+    int result = builtin_less(NIL, &atom_less);
+
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_less.type);
 }
 
 void test_builtin_less_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
@@ -535,10 +574,11 @@ void test_builtin_less_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
 
     Atom args = cons(first, cons(second,third));
 
-    Atom atom_cons;
-    int result = builtin_less(args, &atom_cons);
+    Atom atom_less;
+    int result = builtin_less(args, &atom_less);
 
     CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == atom_less.type);
 }
 
 void test_builtin_less_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -557,20 +597,22 @@ void test_builtin_less_returns_ERROR_TYPE_if_first_arg_is_not_integer(CuTest* tc
     Atom second = make_int(42);
     Atom args = cons(NIL, cons(second, NIL));
 
-    Atom atom_cons;
-    int result = builtin_less(args, &atom_cons);
+    Atom atom_less;
+    int result = builtin_less(args, &atom_less);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_less.type);
 }
 
 void test_builtin_less_returns_ERROR_TYPE_if_second_arg_is_not_integer(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, cons(NIL, NIL));
 
-    Atom atom_cons;
-    int result = builtin_less(args, &atom_cons);
+    Atom atom_less;
+    int result = builtin_less(args, &atom_less);
 
     CuAssertTrue(tc, ERROR_TYPE == result);
+    CuAssertTrue(tc, AtomType_Error == atom_less.type);
 }
 
 void test_builtin_less_returns_true_if_first_arg_is_smaller_than_second(CuTest* tc) {
@@ -579,10 +621,10 @@ void test_builtin_less_returns_true_if_first_arg_is_smaller_than_second(CuTest* 
 
     Atom args = cons(first, cons(second, NIL));
 
-    Atom atom_cons;
-    builtin_less(args, &atom_cons);
+    Atom atom_less;
+    builtin_less(args, &atom_less);
 
-    CuAssertTrue(tc, is_same_string("T", atom_cons.value.symbol));
+    CuAssertTrue(tc, is_same_string("T", atom_less.value.symbol));
 }
 
 void test_builtin_less_returns_NIL_if_first_arg_is_not_smaller_than_second(CuTest* tc) {
