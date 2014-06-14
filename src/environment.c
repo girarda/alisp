@@ -20,8 +20,10 @@ int retrieve_env(Atom env, Atom symbol, Atom *result) {
         bs = cdr(bs);
     }
 
-    if (is_nil(parent))
+    if (is_nil(parent)) {
+        *result = make_error("Error unbound: retrieve_env");
         return ERROR_UNBOUND;
+    }
 
     return retrieve_env(parent, symbol, result);
 }

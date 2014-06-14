@@ -54,6 +54,7 @@ void test_retrieve_env_returns_ERROR_UNBOUND_if_the_symbol_is_not_binded_in_the_
     int error_code = retrieve_env(env, symbol_atom, &get_atom);
 
     CuAssertTrue(tc, ERROR_UNBOUND == error_code);
+    CuAssertTrue(tc, AtomType_Error == get_atom.type);
 }
 
 void test_retrieve_env_can_find_value_binded_in_parent_env(CuTest* tc) {
