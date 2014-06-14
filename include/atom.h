@@ -11,9 +11,11 @@ struct Atom {
     enum {
         AtomType_Builtin,
         AtomType_Closure,
+        AtomType_Error,
         AtomType_Integer,
         AtomType_Macro,
         AtomType_Nil,
+        AtomType_OK,
         AtomType_Pair,
         AtomType_Symbol
     } type;
@@ -23,6 +25,7 @@ struct Atom {
         long integer;
         struct Pair *pair;
         const char *symbol;
+        const char *error;
     } value;
 };
 
@@ -46,11 +49,14 @@ typedef struct Atom Atom;
 #define is_nil(atom) ((atom).type == AtomType_Nil)
 
 static const Atom NIL = { AtomType_Nil };
+static const Atom OK = { AtomType_OK };
+
 static Atom sym_table = { AtomType_Nil };
 
 Atom make_builtin(Builtin function);
 Atom make_int(long x);
 Atom make_sym(const char *s);
+Atom make_error(const char *s);
 
 int make_closure(Atom env, Atom args, Atom body, Atom *result);
 

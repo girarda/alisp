@@ -58,6 +58,24 @@ void test_make_sym_adds_new_symbol_to_symbol_table(CuTest* tc)
     CuAssertTrue(tc, !is_nil(atom_in_table));
 }
 
+void test_make_error_creates_error_atom(CuTest* tc)
+{
+    char *symbol = "Error";
+    Atom atom = make_error(symbol);
+    CuAssertTrue(tc, AtomType_Error == atom.type);
+}
+
+void test_make_error_creates_error_with_right_value(CuTest* tc)
+{
+    char *error = "Error";
+    Atom atom = make_error(error);
+
+    int is_same_error_msg = is_same_string(error, atom.value.error);
+
+    CuAssertTrue(tc, is_same_error_msg);
+}
+
+
 void test_look_for_symbol_returns_nil_if_symbol_is_not_in_table(CuTest* tc)
 {
     char *new_symbol = "NonExistingSymbol";
@@ -134,6 +152,7 @@ void test_make_closure_returns_ERROR_SYNTAX_if_body_is_not_valid_expression(CuTe
     int error_code = make_closure(env, args, body, &result);
 
     CuAssertTrue(tc, ERROR_SYNTAX == error_code);
+    CuAssertTrue(tc, AtomType_Error == result.type);
 }
 
 void test_make_closure_returns_ERROR_TYPE_if_all_arg_names_are_not_symbols(CuTest* tc) {
@@ -143,6 +162,7 @@ void test_make_closure_returns_ERROR_TYPE_if_all_arg_names_are_not_symbols(CuTes
     int error_code = make_closure(env, args, body, &result);
 
     CuAssertTrue(tc, ERROR_TYPE == error_code);
+    CuAssertTrue(tc, AtomType_Error == result.type);
 }
 
 void test_make_closure_creates_closure_atom(CuTest* tc) {
@@ -331,6 +351,10 @@ CuSuite* AtomGetSuite(void) {
     SUITE_ADD_TEST(suite, test_make_sym_creates_symbol_atom);
     SUITE_ADD_TEST(suite, test_make_sym_creates_symbol_with_right_value);
     SUITE_ADD_TEST(suite, test_make_sym_adds_new_symbol_to_symbol_table);
+
+    /* make_error */
+    SUITE_ADD_TEST(suite, test_make_error_creates_error_atom);
+    SUITE_ADD_TEST(suite, test_make_error_creates_error_with_right_value);
 
     /* look_for_symbol */
     SUITE_ADD_TEST(suite, test_look_for_symbol_returns_nil_if_symbol_is_not_in_table);

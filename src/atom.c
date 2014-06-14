@@ -37,6 +37,13 @@ Atom make_sym(const char *s) {
     return atom;
 }
 
+Atom make_error(const char *s) {
+    Atom atom;
+    atom.type = AtomType_Error;
+    atom.value.symbol = strdup(s);
+    return atom;
+}
+
 Atom look_for_symbol(const char *s) {
     Atom atom, existing_symbol;
 
@@ -69,6 +76,7 @@ int make_closure(Atom env, Atom args, Atom body, Atom *result) {
     Atom atom;
 
     if (!is_valid_expr(body)) {
+        *result = make_error("Error syntax: make_closure");
         return ERROR_SYNTAX;
     }
 
@@ -78,6 +86,7 @@ int make_closure(Atom env, Atom args, Atom body, Atom *result) {
         if (atom.type == AtomType_Symbol) {
             break;
         } else if (!is_pair(atom) || !is_symbol(car(atom))) {
+            *result = make_error("Error type: make_closure");
             return ERROR_TYPE;
         }
         atom = cdr(atom);
@@ -134,6 +143,9 @@ void print_expr(Atom atom) {
         break;
     case AtomType_Closure:
         printf("#<CLOSURE:%p>", atom.value.builtin);
+        break;
+    case AtomType_Error:
+        printf("%s", atom.value.symbol);
         break;
     case AtomType_Integer:
         printf("%ld", atom.value.integer);
