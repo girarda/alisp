@@ -300,6 +300,18 @@ void test_is_symbol_returns_false_if_atom_is_not_symbol(CuTest* tc) {
     CuAssertTrue(tc, !is_symbol(atom));
 }
 
+void test_is_error_returns_true_if_atom_is__error(CuTest* tc) {
+    Atom atom = make_error("Error");
+
+    CuAssertTrue(tc, !is_error(atom));
+}
+
+void test_is_error_returns_false_if_atom_is_not_error(CuTest* tc) {
+    Atom atom = make_int(24);
+
+    CuAssertTrue(tc, !is_error(atom));
+}
+
 void test_has_children_returns_true_if_atom_is_closure(CuTest* tc) {
     Atom env, args, body, result;
     env = create_env(NIL);
@@ -401,6 +413,11 @@ CuSuite* AtomGetSuite(void) {
     /* is_symbol */
     SUITE_ADD_TEST(suite, test_is_symbol_returns_true_if_atom_is_symbol);
     SUITE_ADD_TEST(suite, test_is_symbol_returns_false_if_atom_is_not_symbol);
+
+    /* is_error */
+    SUITE_ADD_TEST(suite, test_is_error_returns_true_if_atom_is__error);
+    SUITE_ADD_TEST(suite, test_is_error_returns_false_if_atom_is_not_error);
+
 
     /* has_children */
     SUITE_ADD_TEST(suite, test_has_children_returns_true_if_atom_is_closure);

@@ -132,6 +132,10 @@ int is_symbol(Atom atom) {
     return atom.type == AtomType_Symbol;
 }
 
+int is_error(Atom atom) {
+    return atom.type == AtomType_Error;
+}
+
 int has_children(Atom atom) {
     return is_closure(atom) || is_macro(atom) || is_pair(atom);
 }
@@ -145,7 +149,7 @@ void print_expr(Atom atom) {
         printf("#<CLOSURE:%p>", atom.value.builtin);
         break;
     case AtomType_Error:
-        printf("%s", atom.value.symbol);
+        printf("%s", atom.value.error);
         break;
     case AtomType_Integer:
         printf("%ld", atom.value.integer);

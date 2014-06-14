@@ -66,6 +66,7 @@ int is_closure(Atom atom);
 int is_macro(Atom atom);
 int is_pair(Atom atom);
 int is_symbol(Atom atom);
+int is_error(Atom atom);
 
 int has_children(Atom atom);
 

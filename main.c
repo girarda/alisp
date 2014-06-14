@@ -39,35 +39,25 @@ int main(int argc, char **argv)
             free(input);
             return 0;
         }
+        if (strcmp(input, "") == 0) {
+            continue;
+        }
         add_history(input);
         const char *p = input;
-        Error err;
         Atom expr, result;
 
-        err = read_expr(p, &p, &expr);
+        read_expr(p, &p, &expr);
 
-        if (!err) {
-            err = eval_expr(expr, env, &result);
-        }
-
-        switch (err) {
-        case ERROR_OK:
+        if (!is_error(expr)) {
+            eval_expr(expr, env, &result);
             print_expr(result);
+        } else {
+            print_expr(expr);
             putchar('\n');
-            break;
-        case ERROR_ARGS:
-            puts("Wrong number of arguments");
-            break;
-        case ERROR_SYNTAX:
-            puts("Syntax error");
-            break;
-        case ERROR_TYPE:
-            puts("Wrong type");
-            break;
-        case ERROR_UNBOUND:
-            puts("Symbol not bound");
-            break;
         }
+
+        putchar('\n');
+
         free(input);
     }
 

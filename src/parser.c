@@ -9,7 +9,7 @@ int read_expr(const char *input, const char **end, Atom *result) {
 
     err = lex(input, &token, end);
     if (err) {
-         *result = make_error("Error syntax: read_expr");
+        *result = make_error(""); /* no expression to read */
         return err;
     }
 
