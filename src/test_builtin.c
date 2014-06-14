@@ -43,6 +43,16 @@ void test_builtin_car_returns_NIL_if_first_element_of_pair_is_nil(CuTest* tc) {
     Atom pair = cons(cons(first, second), NIL);
 
     Atom atom_car;
+    int result = builtin_car(pair, &atom_car);
+
+    CuAssertTrue(tc, AtomType_Nil == atom_car.type);
+}
+
+void test_builtin_car_returns_ERROR_TYPE_if_first_element_is_not_a_pair(CuTest* tc) {
+    Atom first = NIL;
+    Atom pair = cons(first, NIL);
+
+    Atom atom_car;
     builtin_car(pair, &atom_car);
 
     CuAssertTrue(tc, atom_car.type == AtomType_Nil);
@@ -203,15 +213,15 @@ void test_builtin_add_returns_sum_of_two_integers(CuTest* tc) {
     CuAssertTrue(tc, 66 == atom_cons.value.integer);
 }
 
-void test_builtin_substract_returns_ERROR_ARGS_if_only_one_arg(CuTest* tc) {
+void test_builtin_substract_negates_the_argument_if_only_one_arg(CuTest* tc) {
     Atom first = make_int(24);
     Atom args = cons(first, NIL);
 
     Atom atom_sub;
     int result = builtin_substract(args, &atom_sub);
 
-    CuAssertTrue(tc, ERROR_ARGS == result);
-    CuAssertTrue(tc, AtomType_Error == atom_sub.type);
+    CuAssertTrue(tc, ERROR_OK == result);
+    CuAssertTrue(tc, -24 == atom_sub.value.integer);
 }
 
 void test_builtin_substract_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
@@ -639,6 +649,46 @@ void test_builtin_less_returns_NIL_if_first_arg_is_not_smaller_than_second(CuTes
     CuAssertTrue(tc, is_nil(atom_cons));
 }
 
+void test_builtin_is_pair_returns_error_args_if_more_than_one_argument(CuTest* tc) {
+    Atom first = make_int(42);
+    Atom second = make_int(42);
+
+    Atom args = cons(first, cons(second, NIL));
+
+    Atom cons;
+    int result = builtin_is_pair(args, &cons);
+
+    CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, AtomType_Error == cons.type);
+}
+
+void test_builtin_is_pair_returns_NIL_if_argument_is_not_a_pair(CuTest* tc) {
+    Atom first = make_int(42);
+
+    Atom args = cons(first, NIL);
+
+    Atom cons;
+    int result = builtin_is_pair(args, &cons);
+
+    CuAssertTrue(tc, ERROR_OK == result);
+    CuAssertTrue(tc, AtomType_Nil == cons.type);
+}
+
+void test_builtin_is_pair_returns_true_if_argument_is_a_pair(CuTest* tc) {
+    Atom first = make_int(42);
+    Atom second = make_int(42);
+
+    Atom args = cons(cons(first, second), NIL);
+
+    Atom cons;
+    int result = builtin_is_pair(args, &cons);
+
+    CuAssertTrue(tc, ERROR_OK == result);
+    CuAssertTrue(tc, is_same_string(cons.value.symbol, "T"));
+}
+
+
+
 CuSuite* BuiltinGetSuite(void) {
     CuSuite* suite = CuSuiteNew();
 
@@ -646,6 +696,7 @@ CuSuite* BuiltinGetSuite(void) {
     SUITE_ADD_TEST(suite, test_builtin_car_returns_ERROR_OK_if_args_is_a_cons_of_cons_NIL);
     SUITE_ADD_TEST(suite, test_builtin_car_returns_ERROR_ARGS_if_args_is_not_a_cons_of_cons);
     SUITE_ADD_TEST(suite, test_builtin_car_returns_the_first_element_of_a_pair);
+    SUITE_ADD_TEST(suite, test_builtin_car_returns_NIL_if_first_element_of_pair_is_nil);
     SUITE_ADD_TEST(suite, test_builtin_car_returns_NIL_if_first_element_of_pair_is_nil);
 
     /* builin_cdr */
@@ -669,7 +720,7 @@ CuSuite* BuiltinGetSuite(void) {
     SUITE_ADD_TEST(suite, test_builtin_add_returns_sum_of_two_integers);
 
     /* builtin_substract */
-    SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_ARGS_if_only_one_arg);
+    SUITE_ADD_TEST(suite, test_builtin_substract_negates_the_argument_if_only_one_arg);
     SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_ARGS_if_arg_is_NIL);
     SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_ARGS_if_more_than_two_args);
     SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_OK_if_two_args);
@@ -716,5 +767,8 @@ CuSuite* BuiltinGetSuite(void) {
     SUITE_ADD_TEST(suite, test_builtin_less_returns_true_if_first_arg_is_smaller_than_second);
     SUITE_ADD_TEST(suite, test_builtin_less_returns_NIL_if_first_arg_is_not_smaller_than_second);
 
-    return suite;
+    /* builtin_is_pair */
+    SUITE_ADD_TEST(suite, test_builtin_is_pair_returns_error_args_if_more_than_one_argument);
+    SUITE_ADD_TEST(suite, test_builtin_is_pair_returns_NIL_if_argument_is_not_a_pair);
+    SUITE_ADD_TEST(suite, test_builtin_is_pair_returns_true_if_argument_is_a_pair);
 }

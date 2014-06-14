@@ -8,12 +8,14 @@ int read_expr(const char *input, const char **end, Atom *result) {
 
     err = lex(input, &token, end);
     if (err) {
+        *result = make_error(""); // Do not read if empty string
         return err;
     }
 
     if (token[0] == '(') {
         return read_list(*end, end, result);
     } else if (token[0] == ')') {
+        *result = make_error("Error syntax: read_expr");
         return ERROR_SYNTAX;
     } else if (token[0] == '\'') {
         *result = cons(make_sym("QUOTE"), cons(NIL, NIL));
@@ -35,27 +37,36 @@ int read_list(const char* start, const char **end, Atom *result) {
         Error err;
 
         err = lex(*end, &token, end);
-        if (err)
+        if (err) {
+            *result = make_error("Syntax error: read_list");
             return err;
+        }
 
-        if (token[0] == ')')
+        if (token[0] == ')') {
             return ERROR_OK;
+        }
 
         if (token[0] == '.' && *end - token == 1) {
             /* Improper list */
-            if (is_nil(p))
+            if (is_nil(p)) {
+                *result = make_error("Error syntax: read_list");
                 return ERROR_SYNTAX;
+            }
 
             err = read_expr(*end, end, &item);
-            if (err)
+            if (err) {
+                *result = make_error("Error syntax: read_list");
                 return err;
+            }
 
             cdr(p) = item;
 
             /* Read the closing ')' */
             err = lex(*end, &token, end);
-            if (!err && token[0] != ')')
+            if (!err && token[0] != ')') {
+                *result = make_error("Error syntax: read_list");
                 err = ERROR_SYNTAX;
+            }
 
             return err;
         }
@@ -77,17 +88,29 @@ int read_list(const char* start, const char **end, Atom *result) {
 
 int parse_simple(const char *start, const char *end, Atom *result)
 {
-    char *buf, *p;
+    int is_number = parse_integer(start, end, result);
+    if (is_number == ERROR_OK) {
+        return ERROR_OK;
+    }
 
-    /* Is it an integer? */
+    parse_symbol_or_nil(start, end, result);
+
+    return ERROR_OK;
+}
+
+int parse_integer(const char *start, const char *end, Atom *result) {
+    char *p;
     long val = strtol(start, &p, 10);
     if (p == end) {
         result->type = AtomType_Integer;
         result->value.integer = val;
         return ERROR_OK;
     }
+    return ERROR_SYNTAX;
+}
 
-    /* NIL or symbol */
+int parse_symbol_or_nil(const char *start, const char *end, Atom *result) {
+    char *p, *buf;
     buf = malloc(end - start + 1);
     p = buf;
     while (start != end)
@@ -100,7 +123,6 @@ int parse_simple(const char *start, const char *end, Atom *result)
         *result = make_sym(buf);
 
     free(buf);
-
     return ERROR_OK;
 }
 

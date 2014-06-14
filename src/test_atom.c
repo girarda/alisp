@@ -303,7 +303,7 @@ void test_is_symbol_returns_false_if_atom_is_not_symbol(CuTest* tc) {
 void test_is_error_returns_true_if_atom_is__error(CuTest* tc) {
     Atom atom = make_error("Error");
 
-    CuAssertTrue(tc, !is_error(atom));
+    CuAssertTrue(tc, is_error(atom));
 }
 
 void test_is_error_returns_false_if_atom_is_not_error(CuTest* tc) {

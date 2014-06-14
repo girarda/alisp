@@ -10,6 +10,10 @@ Execute the following commands in order to compile and run the unit tests.
 * Add missing unit tests for expression.c
 * Add integration tests for gc.c
 * Add missing unit tests for parser.c
+* Add missing unit tests for expression.c
+* Add missing unit tests for builtin_apply
+* Add missing unit tests for apply
+* Add missing unit tests for builtin_eq
 * Assert type in add_symbol_to_table + test
 * Assert atom is pair in car/cdr + test
 * Add useful error messages through macros
