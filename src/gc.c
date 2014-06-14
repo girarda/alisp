@@ -55,5 +55,7 @@ struct Allocation * get_allocation(Atom root) {
 void free_symbol_if_atom_symbol(Atom atom) {
     if(is_symbol(atom)) {
         free(atom.value.symbol);
+    } else if (is_error(atom)) {
+        free(atom.value.error);
     }
 }
