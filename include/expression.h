@@ -18,4 +18,6 @@ Atom list_get(Atom list, int k);
 void list_set(Atom list, int k, Atom value);
 void list_reverse(Atom *list);
 
+int apply(Atom fn, Atom args, Atom *result);
+
 #endif

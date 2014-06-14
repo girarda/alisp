@@ -360,4 +360,37 @@ void list_reverse(Atom *list)
     *list = tail;
 }
 
+int apply(Atom fn, Atom args, Atom *result)
+{
+    Atom env, arg_names, body;
 
+    if (fn.type == AtomType_Builtin)
+        return (*fn.value.builtin)(args, result);
+    else if (fn.type != AtomType_Closure)
+        return ERROR_TYPE;
+
+    env = create_env(car(fn));
+    arg_names = car(cdr(fn));
+    body = cdr(cdr(fn));
+
+    /* Bind the arguments */
+    while (!is_nil(arg_names)) {
+        if (is_nil(args))
+            return ERROR_ARGS;
+        add_binding_env(env, car(arg_names), car(args));
+        arg_names = cdr(arg_names);
+        args = cdr(args);
+    }
+    if (!is_nil(args))
+        return ERROR_ARGS;
+
+    /* Evaluate the body */
+    while (!is_nil(body)) {
+        Error err = eval_expr(car(body), env, result);
+        if (err)
+            return err;
+        body = cdr(body);
+    }
+
+    return ERROR_OK;
+}

@@ -1,5 +1,6 @@
 #include "builtin.h"
 #include "error.h"
+#include "expression.h"
 
 int builtin_car(Atom args, Atom *result) {
     if (is_nil(args) || !is_nil(cdr(args))) {
@@ -189,5 +190,77 @@ int builtin_less(Atom args, Atom *result) {
     } else {
         *result = NIL;
     }
+    return ERROR_OK;
+}
+
+int builtin_apply(Atom args, Atom* result) {
+    Atom function;
+
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        *result = make_error("Error args: builtin_apply");
+        return ERROR_ARGS;
+    }
+
+    function = car(args);
+    args = car(cdr(args));
+
+    if (!is_valid_expr(args)) {
+        *result = make_error("Error syntax: builtin_apply");
+        return ERROR_SYNTAX;
+    }
+
+    return apply(function, args, result);
+}
+
+int builtin_eq(Atom args, Atom* result) {
+    Atom a, b;
+    int eq;
+
+    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+        *result = make_error("Error args: builtin_apply");
+        return ERROR_ARGS;
+    }
+
+    a = car(args);
+    b = car(cdr(args));
+
+    if (a.type == b.type) {
+        switch (a.type) {
+        case AtomType_Builtin:
+            eq = (a.value.builtin == b.value.builtin);
+            break;
+        case AtomType_Closure:
+        case AtomType_Macro:
+        case AtomType_Pair:
+            eq = (a.value.pair == b.value.pair);
+            break;
+        case AtomType_Error:
+            eq = (a.value.error == b.value.error);
+            break;
+        case AtomType_Integer:
+            eq = (a.value.integer == b.value.integer);
+            break;
+        case AtomType_Nil:
+        case AtomType_OK:
+            eq = 1;
+            break;
+        case AtomType_Symbol:
+            eq = (a.value.error == b.value.error);
+            break;
+        }
+    } else {
+        eq = 0;
+    }
+    *result = eq ? make_sym("T") : NIL;
+    return ERROR_OK;
+}
+
+int builtin_is_pair(Atom args, Atom* result) {
+    if (is_nil(args) || !is_nil(cdr(args))) {
+        *result = make_error("Error args: builtin_is_pair");
+        return ERROR_ARGS;
+    }
+
+    *result = (car(args).type == AtomType_Pair ? make_sym("T") : NIL);
     return ERROR_OK;
 }
