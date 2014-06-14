@@ -72,6 +72,13 @@ int builtin_add(Atom args, Atom *result) {
 int builtin_substract(Atom args, Atom *result) {
     Atom a, b;
 
+    /* If only one argument, negate it) */
+    if (!is_nil(args) && is_nil(cdr(args))) {
+        a = car(args);
+         *result = make_int(0 - a.value.integer);
+        return ERROR_OK;
+    }
+
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
         *result = make_error("Error args: builtin_substract");
         return ERROR_ARGS;

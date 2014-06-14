@@ -9,6 +9,7 @@
 #include "builtin.h"
 #include "expression.h"
 #include "gc.h"
+#include "io.h"
 
 int main(int argc, char **argv)
 {
@@ -32,6 +33,8 @@ int main(int argc, char **argv)
     add_binding_env(env, make_sym("="), make_builtin(builtin_numeq));
     add_binding_env(env, make_sym("<"), make_builtin(builtin_less));
 
+    load_file(env, "std.lisp");
+
     while ((input = readline("> ")) != NULL) {
         if (strcmp(input, "exit") == 0 ) {
             gc_clear_marks();
@@ -40,6 +43,7 @@ int main(int argc, char **argv)
             return 0;
         }
         if (strcmp(input, "") == 0) {
+            free(input);
             continue;
         }
         add_history(input);

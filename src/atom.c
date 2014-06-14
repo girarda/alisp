@@ -40,7 +40,7 @@ Atom make_sym(const char *s) {
 Atom make_error(const char *s) {
     Atom atom;
     atom.type = AtomType_Error;
-    atom.value.symbol = strdup(s);
+    atom.value.error = strdup(s);
     return atom;
 }
 
