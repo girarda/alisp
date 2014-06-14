@@ -22,6 +22,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
         } else if (expr.type != AtomType_Pair) {
             *result = expr;
         } else if (!is_valid_expr(expr)) {
+            *result = make_error("Syntax error: eval_expr");
             return ERROR_SYNTAX;
         } else {
             Atom op = car(expr);
@@ -32,6 +33,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
 
                 if (strcmp(op.value.symbol, "QUOTE") == 0) {
                     if (is_nil(args) || !is_nil(cdr(args))) {
+                        *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
 
@@ -40,6 +42,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                     Atom sym;
 
                     if (is_nil(args) || is_nil(cdr(args))) {
+                        *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
 
@@ -48,12 +51,14 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                         err = make_closure(env, cdr(sym), cdr(args), result);
                         sym = car(sym);
                         if (sym.type != AtomType_Symbol) {
+                            *result = make_error("Type error: eval_expr");
                             return ERROR_TYPE;
                         }
                         (void) add_binding_env(env, sym, *result);
                         *result = sym;
                     } else if (sym.type == AtomType_Symbol) {
                         if (!is_nil(cdr(cdr(args)))) {
+                            *result = make_error("Args error: eval_expr");
                             return ERROR_ARGS;
                         }
                         stack = make_frame(stack, env, NIL);
@@ -62,16 +67,19 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                         expr = car(cdr(args));
                         continue;
                     } else {
+                        *result = make_error("Type error: eval_expr");
                         return ERROR_TYPE;
                     }
                 } else if (strcmp(op.value.symbol, "LAMBDA") == 0) {
                     if (is_nil(args) || is_nil(cdr(args))) {
+                        *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
 
                     err = make_closure(env, car(args), cdr(args), result);
                 } else if (strcmp(op.value.symbol, "IF") == 0) {
                     if (is_nil(args) || is_nil(cdr(args)) || is_nil(cdr(cdr(args))) || !is_nil(cdr(cdr(cdr(args))))) {
+                        *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
 
@@ -83,15 +91,18 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                     Atom name, macro;
 
                     if (is_nil(args) || is_nil(cdr(args))) {
+                        *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
 
                     if (car(args).type != AtomType_Pair) {
+                        *result = make_error("Syntax error: eval_expr");
                         return ERROR_SYNTAX;
                     }
 
                     name = car(car(args));
                     if (name.type != AtomType_Symbol) {
+                        *result = make_error("Type error: eval_expr");
                         return ERROR_TYPE;
                     }
 
@@ -104,6 +115,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                     }
                 } else if (strcmp(op.value.symbol, "APPLY") == 0) {
                     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+                        *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
 
@@ -231,6 +243,7 @@ int eval_do_apply(Atom *stack, Atom *expr, Atom *env, Atom *result){
             op = car(args);
             args = car(cdr(args));
             if (!is_valid_expr(args)) {
+                *result = make_error("Syntax error: eval_do_apply");
                 return ERROR_SYNTAX;
             }
 
@@ -244,6 +257,7 @@ int eval_do_apply(Atom *stack, Atom *expr, Atom *env, Atom *result){
         *expr = cons(op, args);
         return ERROR_OK;
     } else if (op.type != AtomType_Closure) {
+        *result = make_error("Type error: eval_do_apply");
         return ERROR_TYPE;
     }
 

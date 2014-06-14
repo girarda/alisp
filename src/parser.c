@@ -9,12 +9,14 @@ int read_expr(const char *input, const char **end, Atom *result) {
 
     err = lex(input, &token, end);
     if (err) {
+         *result = make_error("Error syntax: read_expr");
         return err;
     }
 
     if (token[0] == '(') { /* TODO: Test this case */
         return read_list(*end, end, result);
     } else if (token[0] == ')') {
+        *result = make_error("Error syntax: read_expr");
         return ERROR_SYNTAX;
     } else if (token[0] == '\'') { /* TODO: Test this case */
         *result = cons(make_sym("QUOTE"), cons(NIL, NIL));
@@ -48,6 +50,7 @@ int read_list(const char* start, const char **end, Atom *result) {
         if (token[0] == '.' && *end - token == 1) {
             /* Improper list */
             if (is_nil(atom)) {
+                *result = make_error("Error syntax: read_list");
                 return ERROR_SYNTAX;
             }
 
@@ -61,6 +64,7 @@ int read_list(const char* start, const char **end, Atom *result) {
             /* Read the closing ')' */
             err = lex(*end, &token, end);
             if (!err && token[0] != ')') {
+                *result = make_error("Error syntax: read_list");
                 err = ERROR_SYNTAX;
             }
 
@@ -101,6 +105,7 @@ int parse_integer(const char *start, const char *end, Atom *result) {
         *result = make_int(val);
         return ERROR_OK;
     }
+    *result = make_error("Error syntax: parse_integer");
     return ERROR_SYNTAX;
 }
 

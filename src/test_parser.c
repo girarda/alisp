@@ -210,6 +210,7 @@ void test_read_expr_returns_ERROR_SYNTAX_if_string_starts_with_NULL_terminator(C
     int error_code= read_expr(str, &end, &result);
 
     CuAssertTrue(tc, ERROR_SYNTAX == error_code);
+    CuAssertTrue(tc, AtomType_Error == result.type);
 }
 
 void test_read_expr_returns_ERROR_SYNTAX_if_string_starts_with_closing_parenthesis(CuTest* tc) {
@@ -221,6 +222,7 @@ void test_read_expr_returns_ERROR_SYNTAX_if_string_starts_with_closing_parenthes
     int error_code= read_expr(str, &end, &result);
 
     CuAssertTrue(tc, ERROR_SYNTAX == error_code);
+    CuAssertTrue(tc, AtomType_Error == result.type);
 }
 
 void test_read_expr_returns_ERROR_OK_if_valid_expression(CuTest* tc) {
