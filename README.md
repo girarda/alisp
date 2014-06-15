@@ -36,15 +36,21 @@ __alisp__ supports integer literals, `()`, `t`, `nil`, symbols, strings, and lis
 `car` and `cdr` are accessors for con cells.
  
 ### Numeric operators
-`+` returns the sum of two arguments
+`+` returns the sum of the arguments
+
+	> (+ 1)
 
 	> (+ 1 2)
 
-`-` returns the difference of two arguments or negates one argument
+	> (+ 1 2 3)
 
-	>(- 2 1)
+`-` returns negates the argument if there is only one. Else, it substracts each arguments from the first one
 
-	> (- 2)
+	>(- 2)
+
+	>(- -2)
+
+	> (- 5 2 7)
 
 `*` returns the product of two arguments
 
@@ -158,7 +164,6 @@ __alisp__ as a small library with some useful functions.
 * Assert type in add_symbol_to_table + test
 * Assert atom is pair in car/cdr + test
 * Add useful error messages through macros
-* Use arithmetic operators with variatic arguments
 * Add strings manipulation
 * Add double
 * Be able to manipulate double and long
