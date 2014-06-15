@@ -84,3 +84,7 @@
 
 (define (abs x) (if (< x 0) (- x) x))
 
+(define (count n a)
+  (if (= n 0)
+      a
+      (count (- n 1) (+ a 1))))

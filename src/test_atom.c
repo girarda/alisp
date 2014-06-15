@@ -75,6 +75,22 @@ void test_make_error_creates_error_with_right_value(CuTest* tc)
     CuAssertTrue(tc, is_same_error_msg);
 }
 
+void test_make_string_creates_error_atom(CuTest* tc)
+{
+    char *str = "String";
+    Atom atom = make_string(str);
+    CuAssertTrue(tc, AtomType_String == atom.type);
+}
+
+void test_make_string_creates_string_with_right_value(CuTest* tc)
+{
+    char *str = "String";
+    Atom atom = make_string(str);
+
+    int is_same_str = is_same_string(str, atom.value.string);
+
+    CuAssertTrue(tc, is_same_str);
+}
 
 void test_look_for_symbol_returns_nil_if_symbol_is_not_in_table(CuTest* tc)
 {
@@ -300,7 +316,7 @@ void test_is_symbol_returns_false_if_atom_is_not_symbol(CuTest* tc) {
     CuAssertTrue(tc, !is_symbol(atom));
 }
 
-void test_is_error_returns_true_if_atom_is__error(CuTest* tc) {
+void test_is_error_returns_true_if_atom_is_error(CuTest* tc) {
     Atom atom = make_error("Error");
 
     CuAssertTrue(tc, is_error(atom));
@@ -310,6 +326,18 @@ void test_is_error_returns_false_if_atom_is_not_error(CuTest* tc) {
     Atom atom = make_int(24);
 
     CuAssertTrue(tc, !is_error(atom));
+}
+
+void test_is_string_returns_true_if_atom_is_string(CuTest* tc) {
+    Atom atom = make_string("str");
+
+    CuAssertTrue(tc, is_string(atom));
+}
+
+void test_is_string_returns_false_if_atom_is_not_string(CuTest* tc) {
+    Atom atom = make_int(24);
+
+    CuAssertTrue(tc, !is_string(atom));
 }
 
 void test_has_children_returns_true_if_atom_is_closure(CuTest* tc) {
@@ -368,6 +396,10 @@ CuSuite* AtomGetSuite(void) {
     SUITE_ADD_TEST(suite, test_make_error_creates_error_atom);
     SUITE_ADD_TEST(suite, test_make_error_creates_error_with_right_value);
 
+    /* make_string */
+    SUITE_ADD_TEST(suite, test_make_string_creates_error_atom);
+    SUITE_ADD_TEST(suite, test_make_string_creates_string_with_right_value);
+
     /* look_for_symbol */
     SUITE_ADD_TEST(suite, test_look_for_symbol_returns_nil_if_symbol_is_not_in_table);
     SUITE_ADD_TEST(suite, test_look_for_symbol_returns_symbol_atom_if_symbol_is_in_table);
@@ -415,9 +447,12 @@ CuSuite* AtomGetSuite(void) {
     SUITE_ADD_TEST(suite, test_is_symbol_returns_false_if_atom_is_not_symbol);
 
     /* is_error */
-    SUITE_ADD_TEST(suite, test_is_error_returns_true_if_atom_is__error);
+    SUITE_ADD_TEST(suite, test_is_error_returns_true_if_atom_is_error);
     SUITE_ADD_TEST(suite, test_is_error_returns_false_if_atom_is_not_error);
 
+    /* is_error */
+    SUITE_ADD_TEST(suite, test_is_string_returns_true_if_atom_is_string);
+    SUITE_ADD_TEST(suite, test_is_string_returns_false_if_atom_is_not_string);
 
     /* has_children */
     SUITE_ADD_TEST(suite, test_has_children_returns_true_if_atom_is_closure);

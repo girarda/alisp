@@ -649,6 +649,37 @@ void test_builtin_less_returns_NIL_if_first_arg_is_not_smaller_than_second(CuTes
     CuAssertTrue(tc, is_nil(atom_cons));
 }
 
+void test_builtin_eq_returns_ERROR_ARGS_if_no_arguments_are_provided(CuTest* tc) {
+    Atom atom_result;
+
+    int result = builtin_eq(NIL, &atom_result);
+
+    CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, atom_result.type == AtomType_Error);
+}
+
+void test_builtin_eq_returns_ERROR_ARGS_if_only_one_argument_is_provided(CuTest* tc) {
+    Atom first = make_int(42);
+    Atom atom_result;
+
+    int result = builtin_eq(cons(first, NIL), &atom_result);
+
+    CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, atom_result.type == AtomType_Error);
+}
+
+void test_builtin_eq_returns_ERROR_ARGS_if_more_than_two_arguements_are_provided(CuTest* tc) {
+    Atom first = make_int(42);
+    Atom second = make_int(42);
+    Atom third = make_int(9001);
+    Atom atom_result;
+
+    int result = builtin_eq(cons(first, cons(second, third)), &atom_result);
+
+    CuAssertTrue(tc, ERROR_ARGS == result);
+    CuAssertTrue(tc, atom_result.type == AtomType_Error);
+}
+
 CuSuite* BuiltinGetSuite(void) {
     CuSuite* suite = CuSuiteNew();
 
@@ -726,4 +757,9 @@ CuSuite* BuiltinGetSuite(void) {
     SUITE_ADD_TEST(suite, test_builtin_less_returns_ERROR_TYPE_if_second_arg_is_not_integer);
     SUITE_ADD_TEST(suite, test_builtin_less_returns_true_if_first_arg_is_smaller_than_second);
     SUITE_ADD_TEST(suite, test_builtin_less_returns_NIL_if_first_arg_is_not_smaller_than_second);
+
+    /* builtin_eq */
+    SUITE_ADD_TEST(suite, test_builtin_eq_returns_ERROR_ARGS_if_no_arguments_are_provided);
+    SUITE_ADD_TEST(suite, test_builtin_eq_returns_ERROR_ARGS_if_only_one_argument_is_provided);
+    SUITE_ADD_TEST(suite, test_builtin_eq_returns_ERROR_ARGS_if_more_than_two_arguements_are_provided);
 }

@@ -5,7 +5,6 @@
 
 int eval_expr(Atom expr, Atom env, Atom *result) {
     static int count = 0;
-    Error err = ERROR_OK;
     Atom stack = NIL;
 
     do {
@@ -18,7 +17,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                 }
 
         if (expr.type == AtomType_Symbol) {
-            err = retrieve_env(env, expr, result);
+            retrieve_env(env, expr, result);
         } else if (expr.type != AtomType_Pair) {
             *result = expr;
         } else if (!is_valid_expr(expr)) {
@@ -48,7 +47,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
 
                     sym = car(args);
                     if (sym.type == AtomType_Pair) {
-                        err = make_closure(env, cdr(sym), cdr(args), result);
+                        make_closure(env, cdr(sym), cdr(args), result);
                         sym = car(sym);
                         if (sym.type != AtomType_Symbol) {
                             *result = make_error("Type error: eval_expr");
@@ -76,7 +75,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                         return ERROR_ARGS;
                     }
 
-                    err = make_closure(env, car(args), cdr(args), result);
+                    make_closure(env, car(args), cdr(args), result);
                 } else if (strcmp(op.value.symbol, "IF") == 0) {
                     if (is_nil(args) || is_nil(cdr(args)) || is_nil(cdr(cdr(args))) || !is_nil(cdr(cdr(cdr(args))))) {
                         *result = make_error("Args error: eval_expr");
@@ -106,9 +105,8 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                         return ERROR_TYPE;
                     }
 
-                    err = make_closure(env, cdr(car(args)),
-                        cdr(args), &macro);
-                    if (!err) {
+                    make_closure(env, cdr(car(args)), cdr(args), &macro);
+                    if (!is_error(*result)) {
                         macro.type = AtomType_Macro;
                         *result = name;
                         (void) add_binding_env(env, name, macro);
@@ -127,7 +125,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                     goto push;
                 }
             } else if (op.type == AtomType_Builtin) {
-                err = (*op.value.builtin)(args, result);
+                (*op.value.builtin)(args, result);
             } else {
             push:
                 /* Handle function application */
@@ -141,12 +139,15 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
             break;
         }
 
-        if (!err) {
-            err = eval_do_return(&stack, &expr, &env, result);
+        if (!is_error(*result)) {
+            eval_do_return(&stack, &expr, &env, result);
         }
-    } while (!err);
+    } while (!is_error(*result));
 
-    return err;
+    if (is_error(*result)) {
+        return ERROR_SYNTAX; // may not be the right type, I am trying to remove the whole enum
+    }
+    return ERROR_OK;
 }
 
 int is_valid_expr(Atom expr) {

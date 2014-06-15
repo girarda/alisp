@@ -136,8 +136,6 @@ __alis__ as a small library with some useful functions.
 * Add missing unit tests for builtin_apply
 * Add missing unit tests for apply
 * Add missing unit tests for builtin_eq
-* Add missing unit tests for make_string
-* Add missing unit tests for is_string
 
 * Assert type in add_symbol_to_table + test
 * Assert atom is pair in car/cdr + test

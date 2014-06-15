@@ -244,8 +244,11 @@ int builtin_eq(Atom args, Atom* result) {
         case AtomType_OK:
             eq = 1;
             break;
+        case AtomType_String:
+            eq = (a.value.string == b.value.string);
+            break;
         case AtomType_Symbol:
-            eq = (a.value.error == b.value.error);
+            eq = (a.value.symbol == b.value.symbol);
             break;
         }
     } else {
