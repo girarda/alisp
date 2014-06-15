@@ -4,6 +4,6 @@
 
 char *slurp(const char *path);
 
-void load_file(Atom env, const char *path);
+Atom load_file(Atom env, const char *path);
 
 #endif

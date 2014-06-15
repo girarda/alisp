@@ -649,46 +649,6 @@ void test_builtin_less_returns_NIL_if_first_arg_is_not_smaller_than_second(CuTes
     CuAssertTrue(tc, is_nil(atom_cons));
 }
 
-void test_builtin_is_pair_returns_error_args_if_more_than_one_argument(CuTest* tc) {
-    Atom first = make_int(42);
-    Atom second = make_int(42);
-
-    Atom args = cons(first, cons(second, NIL));
-
-    Atom cons;
-    int result = builtin_is_pair(args, &cons);
-
-    CuAssertTrue(tc, ERROR_ARGS == result);
-    CuAssertTrue(tc, AtomType_Error == cons.type);
-}
-
-void test_builtin_is_pair_returns_NIL_if_argument_is_not_a_pair(CuTest* tc) {
-    Atom first = make_int(42);
-
-    Atom args = cons(first, NIL);
-
-    Atom cons;
-    int result = builtin_is_pair(args, &cons);
-
-    CuAssertTrue(tc, ERROR_OK == result);
-    CuAssertTrue(tc, AtomType_Nil == cons.type);
-}
-
-void test_builtin_is_pair_returns_true_if_argument_is_a_pair(CuTest* tc) {
-    Atom first = make_int(42);
-    Atom second = make_int(42);
-
-    Atom args = cons(cons(first, second), NIL);
-
-    Atom cons;
-    int result = builtin_is_pair(args, &cons);
-
-    CuAssertTrue(tc, ERROR_OK == result);
-    CuAssertTrue(tc, is_same_string(cons.value.symbol, "T"));
-}
-
-
-
 CuSuite* BuiltinGetSuite(void) {
     CuSuite* suite = CuSuiteNew();
 
@@ -766,9 +726,4 @@ CuSuite* BuiltinGetSuite(void) {
     SUITE_ADD_TEST(suite, test_builtin_less_returns_ERROR_TYPE_if_second_arg_is_not_integer);
     SUITE_ADD_TEST(suite, test_builtin_less_returns_true_if_first_arg_is_smaller_than_second);
     SUITE_ADD_TEST(suite, test_builtin_less_returns_NIL_if_first_arg_is_not_smaller_than_second);
-
-    /* builtin_is_pair */
-    SUITE_ADD_TEST(suite, test_builtin_is_pair_returns_error_args_if_more_than_one_argument);
-    SUITE_ADD_TEST(suite, test_builtin_is_pair_returns_NIL_if_argument_is_not_a_pair);
-    SUITE_ADD_TEST(suite, test_builtin_is_pair_returns_true_if_argument_is_a_pair);
 }

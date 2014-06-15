@@ -17,6 +17,5 @@ int builtin_less(Atom args, Atom *result);
 
 int builtin_apply(Atom args, Atom* result);
 int builtin_eq(Atom args, Atom* result);
-int builtin_is_pair(Atom args, Atom* result);
 
 #endif

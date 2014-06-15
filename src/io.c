@@ -1,5 +1,5 @@
 #include "io.h"
-#include "expression.h"
+#include "parser.h"
 #include "error.h"
 #include <stdio.h>
 
@@ -25,15 +25,15 @@ char *slurp(const char *path) {
         return buf;
 }
 
-void load_file(Atom env, const char *path)
+Atom load_file(Atom env, const char *path)
 {
     char *text;
 
     printf("Reading %s...\n", path);
     text = slurp(path);
+    Atom expr;
     if (text) {
         const char *p = text;
-        Atom expr;
         while (read_expr(p, &p, &expr) == ERROR_OK) {
             Atom result;
             Error err = eval_expr(expr, env, &result);
@@ -47,5 +47,8 @@ void load_file(Atom env, const char *path)
             }
         }
         free(text);
+    } else {
+        expr = make_error("IO Error: Could not load file.");
     }
+    return expr;
 }

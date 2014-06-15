@@ -254,13 +254,3 @@ int builtin_eq(Atom args, Atom* result) {
     *result = eq ? make_sym("T") : NIL;
     return ERROR_OK;
 }
-
-int builtin_is_pair(Atom args, Atom* result) {
-    if (is_nil(args) || !is_nil(cdr(args))) {
-        *result = make_error("builtin_is_pair: Invalid number of arguments. Expected 2 arguments.");
-        return ERROR_ARGS;
-    }
-
-    *result = (car(args).type == AtomType_Pair ? make_sym("T") : NIL);
-    return ERROR_OK;
-}

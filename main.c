@@ -33,9 +33,8 @@ int main(int argc, char **argv)
     add_binding_env(env, make_sym("="), make_builtin(builtin_numeq));
     add_binding_env(env, make_sym("<"), make_builtin(builtin_less));
 
-    add_binding_env(env, make_sym("="), make_builtin(builtin_apply));
-    add_binding_env(env, make_sym("<"), make_builtin(builtin_eq));
-    add_binding_env(env, make_sym("<"), make_builtin(builtin_is_pair));
+    add_binding_env(env, make_sym("APPLY"), make_builtin(builtin_apply));
+    add_binding_env(env, make_sym("EQ"), make_builtin(builtin_eq));
 
     load_file(env, "std.lisp");
 

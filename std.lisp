@@ -1,4 +1,55 @@
-(define (abs x) (if (< x 0) (- x) x))
+(define (NOT x)
+  (if x 
+    () 
+    t
+    ))
+
+(define (AND x y) 
+  (if x 
+    (if y 
+      t 
+      ())
+    ()
+    ))
+
+(define (OR x y) 
+  (if x 
+    t
+    (if y 
+      t 
+      ()
+      )
+    ))
+
+(define (LIST . items)
+  (foldr cons nil items))
+
+(define (LEN list) 
+  (if = list nil
+    nil
+    (+ 1 (LEN cdr(list)))
+    ))
+
+(define (FIRST list)
+  (car list))
+
+(define (LAST list)
+  (if (cdr list)
+    (last (cdr list))
+    list
+  ))
+
+(define (INIT list)
+  (if (cdr list)
+    (cons (car list) (init(cdr list)))
+    NIL
+  ))
+
+(define (TAIL list)
+  (cdr list))
+
+(define (reverse list)
+  (foldl (lambda (a x) (cons x a)) nil list))
 
 (define (foldl proc init list)
   (if list
@@ -13,12 +64,6 @@
             (foldr proc init (cdr list)))
       init))
 
-(define (list . items)
-  (foldr cons nil items))
-
-(define (reverse list)
-  (foldl (lambda (a x) (cons x a)) nil list))
-
 (define (unary-map proc list)
   (foldr (lambda (x rest) (cons (proc x) rest))
          nil
@@ -30,3 +75,12 @@
             (apply map (cons proc
                              (unary-map cdr arg-lists))))
       nil))
+
+(define (filter proc  list)
+  (if (car list)
+    (cons 
+      (if (proc (first (list)) (head list) NIL) (filter proc (tail list))))
+    nil))
+
+(define (abs x) (if (< x 0) (- x) x))
+
