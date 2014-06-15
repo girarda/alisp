@@ -153,18 +153,16 @@ void test_builtin_add_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
     CuAssertTrue(tc, atom_add.type == AtomType_Error);
 }
 
-void test_builtin_add_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
-    Atom first = make_int(24);
-    Atom second = make_int(42);
-    Atom third = make_int(9001);
+void test_builtin_add_returns_sum_of_all_integers(CuTest* tc) {
+    Atom first = make_int(1);
+    Atom second = make_int(40);
+    Atom third = make_int(1);
 
-    Atom args = cons(first, cons(second,third));
-
+    Atom args = cons(first, cons(second, cons(third, NIL)));
     Atom atom_add;
     int result = builtin_add(args, &atom_add);
 
-    CuAssertTrue(tc, ERROR_ARGS == result);
-    CuAssertTrue(tc, atom_add.type == AtomType_Error);
+    CuAssertTrue(tc, 42 == atom_add.value.integer);
 }
 
 void test_builtin_add_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -702,9 +700,9 @@ CuSuite* BuiltinGetSuite(void) {
     SUITE_ADD_TEST(suite, test_builtin_cons_returns_cons_of_first_and_second_atoms);
 
     /* builtin_add */
-    SUITE_ADD_TEST(suite, test_builtin_add_returns_ERROR_ARGS_if_only_one_arg);
+    //SUITE_ADD_TEST(suite, test_builtin_add_returns_ERROR_ARGS_if_only_one_arg);
     SUITE_ADD_TEST(suite, test_builtin_add_returns_ERROR_ARGS_if_arg_is_NIL);
-    SUITE_ADD_TEST(suite, test_builtin_add_returns_ERROR_ARGS_if_more_than_two_args);
+    SUITE_ADD_TEST(suite, test_builtin_add_returns_sum_of_all_integers);
     SUITE_ADD_TEST(suite, test_builtin_add_returns_ERROR_OK_if_two_args);
     SUITE_ADD_TEST(suite, test_builtin_add_returns_ERROR_TYPE_if_first_arg_is_not_integer);
     SUITE_ADD_TEST(suite, test_builtin_add_returns_ERROR_TYPE_if_second_arg_is_not_integer);

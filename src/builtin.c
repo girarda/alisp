@@ -52,20 +52,26 @@ int builtin_cons(Atom args, Atom *result) {
 int builtin_add(Atom args, Atom *result) {
     Atom a, b;
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("builtin_add: Invalid number of arguments. Expected 2 arguments.");
+    int sum = 0;
+    if (is_nil(args)) {
+        *result = make_error("builtin_add: Invalid number of arguments. Expected at least one argument.");
         return ERROR_ARGS;
     }
 
-    a = car(args);
-    b = car(cdr(args));
+    b = args;
 
-    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("builtin_add: Invalid type. Expected integer.");
-        return ERROR_TYPE;
+    while (b.type != AtomType_Nil) {
+        a = car(b);
+        if (a.type != AtomType_Integer) {
+            *result = make_error("builtin_add: Invalid argument type. Expected integers.");
+            return ERROR_TYPE;
+        }
+
+        sum += a.value.integer;
+        b = cdr(b);
     }
 
-    *result = make_int(a.value.integer + b.value.integer);
+    *result = make_int(sum);
 
     return ERROR_OK;
 }

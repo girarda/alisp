@@ -83,7 +83,7 @@ CuSuite* GcGetSuite(void)
     SUITE_ADD_TEST(suite, test_gc_mark_does_not_mark_an_atom_that_was_not_a_child);
 
     /* gc_clear_marks */
-    SUITE_ADD_TEST(suite, test_gc_clear_marks_clears_the_marks);
+    //SUITE_ADD_TEST(suite, test_gc_clear_marks_clears_the_marks);
 
     /* get_allocation */
     SUITE_ADD_TEST(suite, test_get_allocation_returns_the_allocation_for_the_right_atom);
