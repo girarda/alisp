@@ -230,18 +230,18 @@ void test_builtin_substract_returns_ERROR_ARGS_if_arg_is_NIL(CuTest* tc) {
     CuAssertTrue(tc, AtomType_Error == atom_sub.type);
 }
 
-void test_builtin_substract_returns_ERROR_ARGS_if_more_than_two_args(CuTest* tc) {
-    Atom first = make_int(24);
-    Atom second = make_int(42);
-    Atom third = make_int(9001);
+void test_builtin_substract_substract_the_arguments_from_the_first_arg(CuTest* tc) {
+    Atom first = make_int(42);
+    Atom second = make_int(1);
+    Atom third = make_int(1);
 
-    Atom args = cons(first, cons(second,third));
+    Atom args = cons(first, cons(second, cons(third, NIL)));
 
     Atom atom_sub;
     int result = builtin_substract(args, &atom_sub);
 
-    CuAssertTrue(tc, ERROR_ARGS == result);
-    CuAssertTrue(tc, AtomType_Error == atom_sub.type);
+    CuAssertTrue(tc, ERROR_OK == result);
+    CuAssertTrue(tc, 40 == atom_sub.value.integer);
 }
 
 void test_builtin_substract_returns_ERROR_OK_if_two_args(CuTest* tc) {
@@ -711,7 +711,7 @@ CuSuite* BuiltinGetSuite(void) {
     /* builtin_substract */
     SUITE_ADD_TEST(suite, test_builtin_substract_negates_the_argument_if_only_one_arg);
     SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_ARGS_if_arg_is_NIL);
-    SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_ARGS_if_more_than_two_args);
+    SUITE_ADD_TEST(suite, test_builtin_substract_substract_the_arguments_from_the_first_arg);
     SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_OK_if_two_args);
     SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_TYPE_if_first_arg_is_not_integer);
     SUITE_ADD_TEST(suite, test_builtin_substract_returns_ERROR_TYPE_if_second_arg_is_not_integer);

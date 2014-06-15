@@ -79,6 +79,16 @@ int builtin_add(Atom args, Atom *result) {
 int builtin_substract(Atom args, Atom *result) {
     Atom a, b;
 
+    if (is_nil(args)) {
+        *result = make_error("builtin_add: Invalid number of arguments. Expected at least one argument.");
+        return ERROR_ARGS;
+    }
+
+    if (car(args).type != AtomType_Integer) {
+        *result = make_error("builtin_add: Invalid argument type. Expected integers.");
+        return ERROR_TYPE;
+    }
+
     /* If only one argument, negate it) */
     if (!is_nil(args) && is_nil(cdr(args))) {
         a = car(args);
@@ -86,20 +96,21 @@ int builtin_substract(Atom args, Atom *result) {
         return ERROR_OK;
     }
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("builtin_substract: Invalid number of arguments. Expected 1 or 2 arguments.");
-        return ERROR_ARGS;
+    int difference = car(args).value.integer;
+    b = cdr(args);
+
+    while (b.type != AtomType_Nil) {
+        a = car(b);
+        if (a.type != AtomType_Integer) {
+            *result = make_error("builtin_add: Invalid argument type. Expected integers.");
+            return ERROR_TYPE;
+        }
+
+        difference -= a.value.integer;
+        b = cdr(b);
     }
 
-    a = car(args);
-    b = car(cdr(args));
-
-    if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("builtin_subtract: Invalid type. Expected integer.");
-        return ERROR_TYPE;
-    }
-
-    *result = make_int(a.value.integer - b.value.integer);
+    *result = make_int(difference);
 
     return ERROR_OK;
 }
