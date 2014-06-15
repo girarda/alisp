@@ -3,14 +3,15 @@ __alisp__ is an implementation of Lisp in C. The implementation contains a mark-
 
 ## Compile
 Execute the following commands in order to compile and run the unit tests.
-    $ make check gen-cmake
-    $ make check
+ 	
+ 	$ make check gen-cmake
+	$ make check
 
 ## Run
 	$ bind/alisp
 
 ## Language features
-__alisp is a Lisp interpreter. It reads on expression at a time from the standard input, evaluates it, and prints the return value of the expression.
+__alisp__ is a Lisp interpreter. It reads on expression at a time from the standard input, evaluates it, and prints the return value of the expression.
 Here is an exmaple of a valid input:
 
 	> (+ 1 2)
@@ -25,43 +26,60 @@ __alisp__ supports integer literals, `()`, `t`, `nil`, symbols, strings, and lis
 * `t` is a predefined variable evaluated to itself. It is the preferred way to represent a true value. 
 * Symbols are objects with unique name. They are used to represent identifiers.
 * String literals are surrounded by `""`.
-* List literals are cons cells. They are either regular lists whose last element's cdr is `()` or a dotted list ending with any non-`() value. Dotted lists are written as `(a . )`.
+* List literals are cons cells. They are either regular lists whose last element's cdr is `()` or a dotted list ending with any non-`()` value. Dotted lists are written as `(a . )`.
 
 ### List operators
 `cons` takes two arguments and creates a new cons cell where the first argument is the car and the second the cdr.
+	
 	> cons(1 2)
 
 `car` and `cdr` are accessors for con cells.
  
 ### Numeric operators
 `+` returns the sum of two arguments
+
 	> (+ 1 2)
+
 `-` returns the difference of two arguments or negates one argument
+
 	>(- 2 1)
+
 	> (- 2)
+
 `*` returns the product of two arguments
+
 	> (* 3 4)
+
 `/` returns the quotient of two arguments
+
 	> (/ 4 2)
+
 `=` returns `t` if the two arguments are the same integer and `()` if they are different
+
 	> (= 2 1)
+
 `<` returns `t` if the first argument is smaller than the second
+
 	> (< 2 1)
 
 ### Conditionals
 `(if cond then else)`. It evaluates *cond*, and if it is true, *then* is evaluated. Otherwise, *else* is evaluated.
+
 	> (if (= 2 3) 4 5)
 
 ### Equivalence test operators
 `eq` takes two arguments and returns `t` if the objects are the same.
+
 	> (eq NIL 2)
 
 ### Definitions
 User defined variables and functions are supported by __alisp__. Functions can defined using `lamda`.
 `(lambda (args ...) expr ...)` returns a function object which can be assign to a variable using `define`.
+
 	> (define square (lambda (x) (* x x)))
 
 The `lambda` can also be omitted in the following way:
+
 	> (define (square x) (* x x))
 
 The two expressions will be evaluated to the same result.
@@ -73,6 +91,7 @@ Tail calls do not require a new stack frame to the call stack, so they can recur
 
 ### Quote
 __alisp__ supports quotes, or `'`, which can be used to manipulate expressions without evaluating them.
+
 	> '((lambda (x) (- x 2)) 7) 
 
 ### Garbage collection
@@ -81,7 +100,7 @@ A mark-and-sweep algorithm is used to collect memory. Since all the data is allo
 Every 100'000 evaluations, the garbage collector goes through the tree of pairs, and mark them as "in used". It then traverses the linked list of allocations and free any atom that is not marked. The marks are then cleared, and the application can continue running.
 
 ## Standard library
-__alis__ as a small library with some useful functions.
+__alisp__ as a small library with some useful functions.
 
 ### Logical Functions
 #### not
@@ -94,38 +113,38 @@ __alis__ as a small library with some useful functions.
 	> (and t ())
 
 ### List functions
-#### list
+#### List
 	> (list 1 2 3)
 
-#### len
+#### Len
 	> (len list 1 2 3)
 
-#### first
+#### First
 	> (first (list 2 3 1))
 
-#### last
+#### Last
 	> (last (list 2 3 1))
 
-#### init
+#### Init
 	> (init (list 2 3 1))
 
-#### tail
+#### Tail
 	> (tail (list 1 2 3))
 
-#### reverse
+#### Reverse
 	> (reverse (list 1 2 3))
 
 #### Fold Left
 	> (foldl + 2 (list 10 20 30))
 
-#### foldr
+#### Fold Right
 	> (foldr + 2 (list 10 20 30))
 
-#### map
+#### Map
 	> (map + '(1 2 3) '(4 5 6))
 
 ### Numeric Functions
-#### abs
+#### Abs
 	> (abs -2)
 
 ## To do
@@ -136,7 +155,6 @@ __alis__ as a small library with some useful functions.
 * Add missing unit tests for builtin_apply
 * Add missing unit tests for apply
 * Add missing unit tests for builtin_eq
-
 * Assert type in add_symbol_to_table + test
 * Assert atom is pair in car/cdr + test
 * Add useful error messages through macros
@@ -162,9 +180,15 @@ __alis__ as a small library with some useful functions.
 
 ## Further Reading
 Here are some references that helped me implement __alisp__ 
+
 1. http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/
+
 2. http://www.buildyourownlisp.com/contents
+
 3. http://www.lwh.jp/lisp/
+
 4. http://jozefg.bitbucket.org/posts/2014-05-05-i-used-c-correctly.html
+
 5. http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
+
 6. https://github.com/rui314/minilisp
