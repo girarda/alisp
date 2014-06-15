@@ -112,7 +112,7 @@ Atom cons(Atom car_val, Atom cdr_val) {
     alloc = malloc(sizeof(struct Allocation));
     alloc->mark = 0;
     alloc->next = global_allocations; /* TODO: test this */
-    global_allocations = alloc; /* TODO: test this */
+    //global_allocations = alloc; /* TODO: test this */
 
     atom.type = AtomType_Pair;
     atom.value.pair = &alloc->pair;
