@@ -57,5 +57,7 @@ void free_symbol_if_atom_symbol(Atom atom) {
         free(atom.value.symbol);
     } else if (is_error(atom)) {
         free(atom.value.error);
+    } else if (is_string(atom)) {
+        free(atom.value.string);
     }
 }

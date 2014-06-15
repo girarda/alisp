@@ -88,6 +88,9 @@ int read_list(const char* start, const char **end, Atom *result) {
 
 int parse_simple(const char *start, const char *end, Atom *result)
 {
+    if (*start == '\"') {
+        return parse_string(start+1, end-1, result);
+    }
     int is_number = parse_integer(start, end, result);
     if (is_number == ERROR_OK) {
         return ERROR_OK;
@@ -121,6 +124,23 @@ int parse_symbol_or_nil(const char *start, const char *end, Atom *result) {
         *result = NIL;
     else
         *result = make_sym(buf);
+
+    free(buf);
+    return ERROR_OK;
+}
+
+int parse_string(const char *start, const char *end, Atom *result) {
+    char *p, *buf;
+    buf = malloc(end - start + 1);
+    p = buf;
+    while (start != end)
+        *p++ = toupper(*start), ++start;
+    *p = '\0';
+
+    if (strcmp(buf, "NIL") == 0)
+        *result = NIL;
+    else
+        *result = make_string(buf);
 
     free(buf);
     return ERROR_OK;

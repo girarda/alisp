@@ -17,6 +17,7 @@ struct Atom {
         AtomType_Nil,
         AtomType_OK,
         AtomType_Pair,
+        AtomType_String,
         AtomType_Symbol
     } type;
 
@@ -26,6 +27,7 @@ struct Atom {
         struct Pair *pair;
         const char *symbol;
         const char *error;
+        const char *string;
     } value;
 };
 
@@ -57,6 +59,7 @@ Atom make_builtin(Builtin function);
 Atom make_int(long x);
 Atom make_sym(const char *s);
 Atom make_error(const char *s);
+Atom make_string(const char *s);
 
 int make_closure(Atom env, Atom args, Atom body, Atom *result);
 
@@ -67,6 +70,7 @@ int is_macro(Atom atom);
 int is_pair(Atom atom);
 int is_symbol(Atom atom);
 int is_error(Atom atom);
+int is_string(Atom atom);
 
 int has_children(Atom atom);
 

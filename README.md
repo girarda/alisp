@@ -14,12 +14,15 @@ Execute the following commands in order to compile and run the unit tests.
 * Add missing unit tests for builtin_apply
 * Add missing unit tests for apply
 * Add missing unit tests for builtin_eq
+* Add missing unit tests for make_string
+* Add missing unit tests for is_string
+
 * Assert type in add_symbol_to_table + test
 * Assert atom is pair in car/cdr + test
 * Add useful error messages through macros
 * Minus with one argument should negate the number
 * Use arithmetic operators with variatic arguments
-* Add strings
+* Add strings manipulation
 * Add double
 * Be able to manipulate double and long
 * Add booleans?

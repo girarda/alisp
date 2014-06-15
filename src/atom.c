@@ -44,6 +44,13 @@ Atom make_error(const char *s) {
     return atom;
 }
 
+Atom make_string(const char *s) {
+    Atom atom;
+    atom.type = AtomType_String;
+    atom.value.string = strdup(s);
+    return atom;
+}
+
 Atom look_for_symbol(const char *s) {
     Atom atom, existing_symbol;
 
@@ -136,6 +143,10 @@ int is_error(Atom atom) {
     return atom.type == AtomType_Error;
 }
 
+int is_string(Atom atom) {
+    return atom.type == AtomType_String;
+}
+
 int has_children(Atom atom) {
     return is_closure(atom) || is_macro(atom) || is_pair(atom);
 }
@@ -179,6 +190,11 @@ void print_expr(Atom atom) {
         break;
     case AtomType_Symbol:
         printf("%s", atom.value.symbol);
+        break;
+    case AtomType_String:
+        putchar('\"');
+        printf("%s", atom.value.string);
+        putchar('\"');
         break;
     }
 }

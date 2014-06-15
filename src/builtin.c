@@ -4,14 +4,14 @@
 
 int builtin_car(Atom args, Atom *result) {
     if (is_nil(args) || !is_nil(cdr(args))) {
-        *result = make_error("Error args: builtin_car");
+        *result = make_error("builtin_car: Invalid number of arguments. Expected 1 argument.");
         return ERROR_ARGS;
     }
 
     if (is_nil(car(args))) {
         *result = NIL;
     } else if (car(args).type != AtomType_Pair) {
-        *result = make_error("Error type: builtin_car");
+        *result = make_error("builtin_car: Invalid type. Expected pair.");
         return ERROR_TYPE;
     } else {
         *result = car(car(args));
@@ -22,14 +22,14 @@ int builtin_car(Atom args, Atom *result) {
 
 int builtin_cdr(Atom args, Atom *result) {
     if (is_nil(args) || !is_nil(cdr(args))) {
-        *result = make_error("Error args: builtin_cdr");
+        *result = make_error("builtin_cdr: Invalid number of arguments. Expected 1 argument.");
         return ERROR_ARGS;
     }
 
     if (is_nil(car(args))) {
         *result = NIL;
     } else if (car(args).type != AtomType_Pair) {
-        *result = make_error("Error type: builtin_cdr");
+        *result = make_error("builtin_cdr: Invalid type. Expected pair.");
         return ERROR_TYPE;
     } else {
         *result = cdr(car(args));
@@ -40,7 +40,7 @@ int builtin_cdr(Atom args, Atom *result) {
 
 int builtin_cons(Atom args, Atom *result) {
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_cons");
+        *result = make_error("builtin_cons: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -53,7 +53,7 @@ int builtin_add(Atom args, Atom *result) {
     Atom a, b;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_add");
+        *result = make_error("builtin_add: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -61,7 +61,7 @@ int builtin_add(Atom args, Atom *result) {
     b = car(cdr(args));
 
     if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("Error type: builtin_add");
+        *result = make_error("builtin_add: Invalid type. Expected integer.");
         return ERROR_TYPE;
     }
 
@@ -81,7 +81,7 @@ int builtin_substract(Atom args, Atom *result) {
     }
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_substract");
+        *result = make_error("builtin_substract: Invalid number of arguments. Expected 1 or 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -89,7 +89,7 @@ int builtin_substract(Atom args, Atom *result) {
     b = car(cdr(args));
 
     if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("Error type: builtin_substract");
+        *result = make_error("builtin_subtract: Invalid type. Expected integer.");
         return ERROR_TYPE;
     }
 
@@ -102,7 +102,7 @@ int builtin_multiply(Atom args, Atom *result) {
     Atom a, b;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_multiply");
+        *result = make_error("builtin_multiply: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -110,7 +110,7 @@ int builtin_multiply(Atom args, Atom *result) {
     b = car(cdr(args));
 
     if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("Error type: builtin_multiply");
+        *result = make_error("builtin_multiply: Invalid type. Expected integer.");
         return ERROR_TYPE;
     }
 
@@ -123,7 +123,7 @@ int builtin_divide(Atom args, Atom *result) {
     Atom a, b;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_divide");
+        *result = make_error("builtin_divide: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -131,12 +131,12 @@ int builtin_divide(Atom args, Atom *result) {
     b = car(cdr(args));
 
     if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("Error type: builtin_divide");
+        *result = make_error("builtin_divide: Invalid type. Expected integer.");
         return ERROR_TYPE;
     }
 
     if (b.value.integer == 0) {
-        *result = make_error("Error args: builtin_divide. Cannot divide by zero");
+        *result = make_error("builtin_divide. Invalid arguments. Cannot divide by zero");
         return ERROR_ARGS;
     }
 
@@ -149,7 +149,7 @@ int builtin_numeq(Atom args, Atom *result) {
     Atom a, b;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_numeq");
+        *result = make_error("builtin_numeq: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -157,7 +157,7 @@ int builtin_numeq(Atom args, Atom *result) {
     b = car(cdr(args));
 
     if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("Error type: builtin_numeq");
+        *result = make_error("builtin_numeq: Invalid type. Expected integer.");
         return ERROR_TYPE;
     }
 
@@ -173,7 +173,7 @@ int builtin_less(Atom args, Atom *result) {
     Atom a, b;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_less");
+        *result = make_error("builtin_less: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -181,7 +181,7 @@ int builtin_less(Atom args, Atom *result) {
     b = car(cdr(args));
 
     if (a.type != AtomType_Integer || b.type != AtomType_Integer) {
-        *result = make_error("Error type: builtin_less");
+        *result = make_error("builtin_less: Invalid type. Expected integer.");
         return ERROR_TYPE;
     }
 
@@ -197,7 +197,7 @@ int builtin_apply(Atom args, Atom* result) {
     Atom function;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_apply");
+        *result = make_error("builtin_apply: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -205,7 +205,7 @@ int builtin_apply(Atom args, Atom* result) {
     args = car(cdr(args));
 
     if (!is_valid_expr(args)) {
-        *result = make_error("Error syntax: builtin_apply");
+        *result = make_error("builtin_apply: Syntax error.");
         return ERROR_SYNTAX;
     }
 
@@ -217,7 +217,7 @@ int builtin_eq(Atom args, Atom* result) {
     int eq;
 
     if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
-        *result = make_error("Error args: builtin_apply");
+        *result = make_error("builtin_apply: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
@@ -257,7 +257,7 @@ int builtin_eq(Atom args, Atom* result) {
 
 int builtin_is_pair(Atom args, Atom* result) {
     if (is_nil(args) || !is_nil(cdr(args))) {
-        *result = make_error("Error args: builtin_is_pair");
+        *result = make_error("builtin_is_pair: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
 
