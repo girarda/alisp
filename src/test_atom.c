@@ -376,6 +376,34 @@ void test_has_children_returns_false_if_atom_is_not_closure_nor_macro_nor_pair(C
     CuAssertTrue(tc, !has_children(atom));
 }
 
+void test_length_cons_returns_length_of_cons(CuTest* tc) {
+    Atom first = make_int(24);
+    Atom second = make_int(42);
+
+    Atom args = cons(first, cons(second, NIL));
+    int len = length_cons(args);
+
+    CuAssertTrue(tc, len == 2);
+}
+
+void test_length_cons_returns_one_if_not_cons(CuTest* tc) {
+    Atom first = make_int(24);
+    int len = length_cons(first);
+    CuAssertTrue(tc, len == 1);
+}
+
+void test_length_cons_returns_three_if_cons_of_cons(CuTest* tc) {
+    Atom first = make_int(1);
+    Atom second = make_int(40);
+    Atom third = make_int(1);
+
+    Atom args = cons(first, cons(second, cons(third, NIL)));
+    int len = length_cons(args);
+
+    CuAssertTrue(tc, len == 3);
+
+}
+
 CuSuite* AtomGetSuite(void) {
     CuSuite* suite = CuSuiteNew();
 
@@ -459,6 +487,11 @@ CuSuite* AtomGetSuite(void) {
     SUITE_ADD_TEST(suite, test_has_children_returns_true_if_atom_is_macro);
     SUITE_ADD_TEST(suite, test_has_children_returns_true_if_atom_is_pair);
     SUITE_ADD_TEST(suite, test_has_children_returns_false_if_atom_is_not_closure_nor_macro_nor_pair);
+
+    /* length_cons */
+    SUITE_ADD_TEST(suite, test_length_cons_returns_length_of_cons);
+    SUITE_ADD_TEST(suite, test_length_cons_returns_one_if_not_cons);
+    SUITE_ADD_TEST(suite, test_length_cons_returns_three_if_cons_of_cons);
 
     return suite;
 }

@@ -3,7 +3,7 @@
 #include "expression.h"
 
 int builtin_car(Atom args, Atom *result) {
-    if (is_nil(args) || !is_nil(cdr(args))) {
+    if (length_cons(args) != 1) {
         *result = make_error("builtin_car: Invalid number of arguments. Expected 1 argument.");
         return ERROR_ARGS;
     }
@@ -21,7 +21,7 @@ int builtin_car(Atom args, Atom *result) {
 }
 
 int builtin_cdr(Atom args, Atom *result) {
-    if (is_nil(args) || !is_nil(cdr(args))) {
+    if (length_cons(args) != 1) {
         *result = make_error("builtin_cdr: Invalid number of arguments. Expected 1 argument.");
         return ERROR_ARGS;
     }
@@ -39,7 +39,7 @@ int builtin_cdr(Atom args, Atom *result) {
 }
 
 int builtin_cons(Atom args, Atom *result) {
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+    if (length_cons(args) != 2) {
         *result = make_error("builtin_cons: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
@@ -90,7 +90,7 @@ int builtin_substract(Atom args, Atom *result) {
     }
 
     /* If only one argument, negate it) */
-    if (!is_nil(args) && is_nil(cdr(args))) {
+    if (length_cons(args) == 1) {
         a = car(args);
          *result = make_int(0 - a.value.integer);
         return ERROR_OK;
@@ -118,7 +118,7 @@ int builtin_substract(Atom args, Atom *result) {
 int builtin_multiply(Atom args, Atom *result) {
     Atom a, b;
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+    if (length_cons(args) != 2) {
         *result = make_error("builtin_multiply: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
@@ -139,7 +139,7 @@ int builtin_multiply(Atom args, Atom *result) {
 int builtin_divide(Atom args, Atom *result) {
     Atom a, b;
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+    if (length_cons(args) != 2) {
         *result = make_error("builtin_divide: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
@@ -165,7 +165,7 @@ int builtin_divide(Atom args, Atom *result) {
 int builtin_numeq(Atom args, Atom *result) {
     Atom a, b;
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+    if (length_cons(args) != 2) {
         *result = make_error("builtin_numeq: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
@@ -189,7 +189,7 @@ int builtin_numeq(Atom args, Atom *result) {
 int builtin_less(Atom args, Atom *result) {
     Atom a, b;
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+    if (length_cons(args) != 2) {
         *result = make_error("builtin_less: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
@@ -213,7 +213,7 @@ int builtin_less(Atom args, Atom *result) {
 int builtin_apply(Atom args, Atom* result) {
     Atom function;
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+    if (length_cons(args) != 2) {
         *result = make_error("builtin_apply: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }
@@ -233,7 +233,7 @@ int builtin_eq(Atom args, Atom* result) {
     Atom a, b;
     int eq;
 
-    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+    if (length_cons(args) != 2) {
         *result = make_error("builtin_apply: Invalid number of arguments. Expected 2 arguments.");
         return ERROR_ARGS;
     }

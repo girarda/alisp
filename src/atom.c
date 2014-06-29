@@ -151,6 +151,18 @@ int has_children(Atom atom) {
     return is_closure(atom) || is_macro(atom) || is_pair(atom);
 }
 
+int length_cons(Atom atom) {
+    int count = 0;
+    while (!is_nil(atom)) {
+        ++count;
+        if (!is_pair(atom)) {
+            break;
+        }
+        atom = cdr(atom);
+    }
+    return count;
+}
+
 void print_expr(Atom atom) {
     switch(atom.type) {
     case AtomType_Builtin:

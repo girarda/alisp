@@ -30,8 +30,8 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
             if (op.type == AtomType_Symbol) {
                 /* Handle special forms */
 
-                if (strcmp(op.value.symbol, "QUOTE") == 0) {
-                    if (is_nil(args) || !is_nil(cdr(args))) {
+                if (strcmp(op.value.symbol, "QUOTE") == 0) { /* I'm not sure this one still works */
+                    if (length_cons(args) != 1) {
                         *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
@@ -40,7 +40,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                 } else if (strcmp(op.value.symbol, "DEFINE") == 0) {
                     Atom sym;
 
-                    if (is_nil(args) || is_nil(cdr(args))) {
+                    if (length_cons(args) < 2) {
                         *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
@@ -70,14 +70,14 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                         return ERROR_TYPE;
                     }
                 } else if (strcmp(op.value.symbol, "LAMBDA") == 0) {
-                    if (is_nil(args) || is_nil(cdr(args))) {
+                    if (length_cons(args) < 2) {
                         *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
 
                     make_closure(env, car(args), cdr(args), result);
                 } else if (strcmp(op.value.symbol, "IF") == 0) {
-                    if (is_nil(args) || is_nil(cdr(args)) || is_nil(cdr(cdr(args))) || !is_nil(cdr(cdr(cdr(args))))) {
+                    if (length_cons(args) != 3) {
                         *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
@@ -89,7 +89,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                 } else if (strcmp(op.value.symbol, "DEFMACRO") == 0) {
                     Atom name, macro;
 
-                    if (is_nil(args) || is_nil(cdr(args))) {
+                    if (length_cons(args) < 2) {
                         *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }
@@ -112,7 +112,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                         (void) add_binding_env(env, name, macro);
                     }
                 } else if (strcmp(op.value.symbol, "APPLY") == 0) {
-                    if (is_nil(args) || is_nil(cdr(args)) || !is_nil(cdr(cdr(args)))) {
+                    if (length_cons(args) != 2) {
                         *result = make_error("Args error: eval_expr");
                         return ERROR_ARGS;
                     }

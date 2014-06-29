@@ -74,6 +74,8 @@ int is_string(Atom atom);
 
 int has_children(Atom atom);
 
+int length_cons(Atom atom);
+
 void print_expr(Atom atom);
 
 // private methods
