@@ -31,19 +31,13 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                 /* Handle special forms */
 
                 if (strcmp(op.value.symbol, "QUOTE") == 0) { /* I'm not sure this one still works */
-                    if (length_cons(args) != 1) {
-                        *result = make_error("Args error: eval_expr");
-                        return ERROR_ARGS;
-                    }
+                    ASSERT_NUM_ARGS("eval_expr", args, 1, result)
 
                     *result = car(args);
                 } else if (strcmp(op.value.symbol, "DEFINE") == 0) {
                     Atom sym;
 
-                    if (length_cons(args) < 2) {
-                        *result = make_error("Args error: eval_expr");
-                        return ERROR_ARGS;
-                    }
+                    ASSERT_NUM_ARGS("eval_expr", args, 2, result)
 
                     sym = car(args);
                     if (sym.type == AtomType_Pair) {
@@ -77,10 +71,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
 
                     make_closure(env, car(args), cdr(args), result);
                 } else if (strcmp(op.value.symbol, "IF") == 0) {
-                    if (length_cons(args) != 3) {
-                        *result = make_error("Args error: eval_expr");
-                        return ERROR_ARGS;
-                    }
+                    ASSERT_NUM_ARGS("eval_expr", args, 3, result)
 
                     stack = make_frame(stack, env, cdr(args));
                     list_set(stack, 2, op);
@@ -89,10 +80,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                 } else if (strcmp(op.value.symbol, "DEFMACRO") == 0) {
                     Atom name, macro;
 
-                    if (length_cons(args) < 2) {
-                        *result = make_error("Args error: eval_expr");
-                        return ERROR_ARGS;
-                    }
+                    ASSERT_NUM_ARGS("eval_expr", args, 2, result)
 
                     if (car(args).type != AtomType_Pair) {
                         *result = make_error("Syntax error: eval_expr");
@@ -112,10 +100,7 @@ int eval_expr(Atom expr, Atom env, Atom *result) {
                         (void) add_binding_env(env, name, macro);
                     }
                 } else if (strcmp(op.value.symbol, "APPLY") == 0) {
-                    if (length_cons(args) != 2) {
-                        *result = make_error("Args error: eval_expr");
-                        return ERROR_ARGS;
-                    }
+                    ASSERT_NUM_ARGS("eval_expr", args, 2, result)
 
                     stack = make_frame(stack, env, cdr(args));
                     list_set(stack, 2, op);

@@ -78,6 +78,17 @@ int length_cons(Atom atom);
 
 void print_expr(Atom atom);
 
+
+/* Error handling macros */
+
+#ifndef ASSERT_NUM_ARGS
+#define ASSERT_NUM_ARGS(func, args, expect, result) \
+    if (length_cons(args) != expect) { \
+        *result = make_error("Args error"); \
+        return ERROR_ARGS; \
+    }
+#endif
+
 // private methods
 Atom look_for_symbol(const char *s);
 Atom create_and_add_symbol_to_table(const char *s);
