@@ -51,6 +51,13 @@ int main(int argc, char **argv)
         }
         add_history(input);
         const char *p = input;
+
+        char* comment = strchr(input, ';');
+
+        if (comment != NULL) {
+            *comment = '\0';
+        }
+
         Atom expr, result;
 
         read_expr(p, &p, &expr);
