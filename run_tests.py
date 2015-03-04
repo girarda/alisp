@@ -10,6 +10,9 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+def color_string(string, color):
+    return color + string + bcolors.ENDC
+
 class Test:
     def __init__(self, code, expected_result, comment):
         self.code = code
@@ -30,16 +33,15 @@ def prepare_test(lines):
     return Test(code, expected_result, comment)
 
 def run_test(test):
-    print(test.comment)
+    
 
     result = test.execute("bin/alisp")
     cmd = 'printf "{}" | bin/alisp'.format(test.code)
     
     if test.expected_result == result:
-        print(bcolors.OKGREEN + "Pass" + bcolors.ENDC)
+        print(color_string(".",bcolors.OKGREEN)) ,
     else:
-        print(bcolors.FAIL + "Fail\nExpected: {}\nGot: {}".format(test.expected_result, result) + bcolors.ENDC)
-    print("")
+        print(color_string(".\n{}Fail\nExpected: {}\nGot: {}".format(test.comment, test.expected_result, result), bcolors.FAIL))
     
 
 def extract_expected_result(lines):
