@@ -28,10 +28,13 @@
 (define (FIRST list)
   (car list))
 
-(define (LAST list)
+(define (_LAST list)
   (if (cdr list)
-    (last (cdr list))
-    list))
+    (_last (cdr list))
+    (car list)))
+
+(define (LAST list)
+  (_LAST list))
 
 (define (INIT list)
   (if (cdr list)
