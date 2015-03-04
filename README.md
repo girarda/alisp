@@ -6,6 +6,12 @@ Execute the following commands in order to compile and run the unit tests.
  	
  	$ make check gen-cmake
 	$ make check
+	
+Requires libedit.
+
+On Ubuntu:
+
+	$ sudo apt-get install libedit-dev
 
 ## Run
 	$ bind/alisp
