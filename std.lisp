@@ -21,9 +21,9 @@
   (foldr cons nil items))
 
 (define (LEN list) 
-  (if = list nil
-    nil
-    (+ 1 (len cdr(list)))))
+  (if (not list)
+    0
+    (+ 1 (len (cdr list)))))
 
 (define (FIRST list)
   (car list))

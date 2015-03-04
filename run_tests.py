@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, sys
 
 class bcolors:
     HEADER = '\033[95m'
@@ -55,7 +55,7 @@ def extract_comments(lines):
 def extract_code(lines):
     return "\n".join(lines)
 
-with open("tests.lisp") as test_file:
+with open(sys.argv[1]) as test_file:
     lines = [l.strip() for l in test_file.readlines()]
 
     line_index = 0
@@ -67,3 +67,7 @@ with open("tests.lisp") as test_file:
             current_test = []
         else:
             current_test.append(line)
+    if len(current_test) > 0:
+        test = prepare_test(current_test)
+        run_test(test)
+        current_test = []
