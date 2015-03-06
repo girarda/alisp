@@ -35,6 +35,7 @@ int main(int argc, char **argv)
 
     add_binding_env(env, make_sym("APPLY"), make_builtin(builtin_apply));
     add_binding_env(env, make_sym("EQ"), make_builtin(builtin_eq));
+    add_binding_env(env, make_sym("PAIR?"), make_builtin(builtin_is_pair));
 
     load_file(env, "std.lisp");
 
@@ -61,6 +62,10 @@ int main(int argc, char **argv)
         Atom expr, result;
 
         read_expr(p, &p, &expr);
+
+        printf("expr:\n");
+        print_expr(expr);
+        printf("\n");
 
         if (!is_error(expr)) {
             eval_expr(expr, env, &result);

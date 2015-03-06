@@ -20,7 +20,13 @@ int read_expr(const char *input, const char **end, Atom *result) {
     } else if (token[0] == '\'') {
         *result = cons(make_sym("QUOTE"), cons(NIL, NIL));
         return read_expr(*end, end, &car(cdr(*result)));
-    } else {
+    } else if (token[0] == '`') {
+        *result = cons(make_sym("QUASIQUOTE"), cons(NIL, NIL));
+        return read_expr(*end, end, &car(cdr(*result)));
+    } else if (token[0] == ',') {
+        *result = cons(make_sym(token[1] == '@' ? "UNQUOTE-SPLICING" : "UNQUOTE"), cons(NIL, NIL));
+        return read_expr(*end, end, &car(cdr(*result)));
+    }else {
         return parse_simple(token, *end, result);
     }
 }
@@ -149,7 +155,7 @@ int parse_string(const char *start, const char *end, Atom *result) {
 int lex(const char *str, const char **start, const char **end) {
     const char *ws = " \t\n";
     const char *delim = "() \t\n";
-    const char *prefix = "()\'";
+    const char *prefix = "()'`";
 
     str += strspn(str, ws);
 
@@ -160,10 +166,14 @@ int lex(const char *str, const char **start, const char **end) {
 
     *start = str;
 
-    if (strchr(prefix, str[0]) != NULL)
+    if (strchr(prefix, str[0]) != NULL) {
         *end = str + 1;
-    else
+    } else if (str[0] == ',') {
+        /* Handle special tokens */
+        *end = str + (str[1] == '@' ? 2 : 1);
+    } else {
         *end = str + strcspn(str, delim);
+    }
 
     return ERROR_OK;
 }

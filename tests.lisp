@@ -132,3 +132,16 @@ foo
 (defmacro (ignore x) (cons 'quote (cons x nil)))
 (ignore foo)
 ;=>foo
+
+;; Test tail recursion
+(define (count n a) (if (= n 0) a(count (- n 1) (+ a 1))))
+(count 100000 0)
+;=>100000 
+
+;; Test pair false
+(pair? 2)
+;=>nil
+
+;; Test pair true
+(pair? '(1 2 3))
+;=>t

@@ -21,7 +21,8 @@ int retrieve_env(Atom env, Atom symbol, Atom *result) {
     }
 
     if (is_nil(parent)) {
-        *result = make_error("Error unbound: retrieve_env");
+        printf("err:%s", symbol.value.symbol);
+        *result = make_error("Error unbound: retrieve_env %s");
         return ERROR_UNBOUND;
     }
 

@@ -8,6 +8,8 @@ int builtin_car(Atom args, Atom *result) {
     if (is_nil(car(args))) {
         *result = NIL;
     } else if (car(args).type != AtomType_Pair) {
+        print_expr(args);
+        printf("builtin car. got :%d\n%s\n", car(args).type, car(args).value.symbol);
         *result = make_error("builtin_car: Invalid type. Expected pair.");
         return ERROR_TYPE;
     } else {
@@ -246,4 +248,15 @@ int builtin_eq(Atom args, Atom* result) {
     }
     *result = eq ? make_sym("T") : NIL;
     return ERROR_OK;
+}
+
+int builtin_is_pair(Atom args, 
+    Atom* result) {
+    if (is_nil(args) || !is_nil(cdr(args))) {
+        return ERROR_ARGS;
+    } else {
+        *result = (car(args).type == AtomType_Pair) ? make_sym("T") : NIL;
+    }
+
+    
 }
