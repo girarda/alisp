@@ -3,12 +3,7 @@
     () 
     t))
 
-(define (AND x y) 
-  (if x 
-    (if y 
-      t 
-      ())
-    ()))
+(defmacro (and a b) (list 'if a b nil))
 
 (define (OR x y) 
   (if x 
